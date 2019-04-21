@@ -3,6 +3,8 @@ defaultTasks "jar"
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
+import org.apache.tools.ant.taskdefs.condition.Os
+
 repositories {
     jcenter()
 }
@@ -24,5 +26,30 @@ jar {
 
 	manifest {
 		attributes "Main-Class": "com.sep.timetracker.Main"
+	}
+}
+
+task installJar(type: Copy) {
+	dependsOn jar
+    from file("$project.projectDir/timetracker.jar")
+    into file("/usr/local/bin/")
+}
+
+
+task install {
+	dependsOn test, installJar
+	doLast {
+		if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+			println "This task cannot be executed on Windows."
+		} else {
+			new File("/usr/local/bin/tt").text = """
+#!/bin/sh
+java -jar /usr/local/bin/timetracker.jar \$@
+"""
+			exec {
+				executable "sh"
+				args "-c", "chmod a+x /usr/local/bin/tt"
+			}
+		}
 	}
 }
