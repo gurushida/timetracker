@@ -47,6 +47,7 @@ public class Main {
 		case "start": startTimeTracking(); return;
 		case "stop": stopTimeTracking(timeTracker, args); return;
 		case "add": reportTime(timeTracker, args); return;
+		default: System.out.println("Unknown command: '" + args[0] + "'"); return;
 		}
 	}
 
@@ -381,7 +382,10 @@ public class Main {
 		System.out.println();
 		System.out.println("Commands:");
 		System.out.println();
-		System.out.println("  help             Prints this help.");
+		System.out.println("  help             Prints this basic help.");
+		if (!System.getProperty("os.name").toLowerCase().contains("windows")) {
+			System.out.println("                   Use 'man tt' for more details.");
+		}
 		System.out.println();
 		System.out.println("  start            Starts tracking time from now.");
 		System.out.println();
@@ -410,7 +414,7 @@ public class Main {
 		System.out.println("                     week   Prints the current week (default)");
 		System.out.println("                     month  Prints the current month");
 		System.out.println("                     year   Prints the current year");
-		System.out.println("                     all    Prints everyting since the time tracking begun");
+		System.out.println("                     all    Prints everyting since the time tracking began");
 		System.out.println();
 		System.out.println("                   \u2591\u2591\u2591 Hours due and not worked");
 		System.out.println("                   \u2588\u2588\u2588 Hours due and worked");
