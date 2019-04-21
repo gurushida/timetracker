@@ -1,0 +1,28 @@
+defaultTasks "jar"
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+repositories {
+    jcenter()
+}
+
+sourceSets {
+	sourceSets {
+		main.java.srcDirs = ['src']
+		test.java.srcDirs = ['test']
+	}
+
+	dependencies {
+		testCompile 'junit:junit:4.12'
+	}
+}
+
+jar {
+	destinationDir file("$project.projectDir/")
+	archiveName "timetracker.jar"
+
+	manifest {
+		attributes "Main-Class": "com.sep.timetracker.Main"
+	}
+}
