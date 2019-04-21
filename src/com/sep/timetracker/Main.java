@@ -66,6 +66,8 @@ public class Main {
 	}
 
 	private static void stopTimeTracking(TimeTracker timeTracker, String[] args) throws IOException, ParseException {
+		GitUtil.checkUncommittedChanges(dir);
+
 		boolean force = args.length > 1 && "--force".equals(args[1]);
 		int descriptionPos = force ? 2 : 1;
 		String description = descriptionPos < args.length ? args[descriptionPos] : null;
