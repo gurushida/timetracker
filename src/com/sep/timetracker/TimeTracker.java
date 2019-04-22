@@ -61,6 +61,12 @@ public class TimeTracker {
 		default: throw new IllegalArgumentException();
 		}
 		
+		if (reportStart.compareTo(config.getTrackingStart()) < 0) {
+			System.err.println("Cannot start report at " + Util.DAY_FORMAT.format(reportStart)
+				+ " as time tracking started on " + Util.DAY_FORMAT.format(dateStart));
+			reportStart = dateStart;
+		}
+
 		String current = normalizedStart;
 		long totalAmountDue = 0;
 		long totalAmountWorked = 0;
