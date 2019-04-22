@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.time.Duration;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Main {
 
@@ -420,9 +422,23 @@ public class Main {
 			// See comment in reportTime()
 			return;
 		}
-		dir.mkdir();
 
-		Config.initialize(new File(dir, Config.FILENAME), d);
+		int vacationDaysPerYear = 25;
+		if (args.length > 2) {
+			Pattern p = Pattern.compile("^--vacations=([0-9]+)$");
+			Matcher m = p.matcher(args[2]);
+			if (!args[2].startsWith("--vacations=") || !m.matches()) {
+				System.err.println("Invalid argument: " + args[2]);
+				System.err.println();
+				System.exit(1);
+				return;
+			}
+			System.out.println(m.groupCount());
+			vacationDaysPerYear = Integer.valueOf(m.group(1));
+		}
+
+		dir.mkdir();
+		Config.initialize(new File(dir, Config.FILENAME), d, vacationDaysPerYear);
 		Holidays.initialize(new File(dir, Holidays.FILENAME));
 		Vacations.initialize(new File(dir, Vacations.FILENAME));
 		SickDays.initialize(new File(dir, SickDays.FILENAME));
@@ -477,8 +493,12 @@ public class Main {
 		System.out.println("                     ###    Hours due and worked");
 		System.out.println("                     +++    Overtime hours (any time worked past the expected duration for the day)");
 		System.out.println();
-		System.out.println("  init <start>     Initializes time tracking. <start> is the date to start time tracking from");
-		System.out.println("                   in dd/mm/yyyy format.");
+		System.out.println("  init <start> [--vacations=<N>]");
+		System.out.println("                   Initializes time tracking. <start> is the date to start time tracking from");
+		System.out.println("                   in dd/mm/yyyy format. If --vacations is specified, <N> is an integer indicating the");
+		System.out.println("                   number of vacation days allowed per year. The default is 25 days. This value");
+		System.out.println("                   is only used a safety net to prevent you from accidentally registering too many");
+		System.out.println("                   vacation days on a given year.");
 		System.out.println();
 	}
 }

@@ -83,7 +83,7 @@ public class Vacations extends TimeInfoManager {
 		Vacations v = new Vacations(f);
 		v.addLine("# This file list vacation days in the dd/mm/yyyy format.");
 		v.addLine("# If a vacation day is registered as a half-worked day in the public holidays,");
-		v.addLine("# it will only be counted as 0.5 day when it comes to the annual 25 days limit.");
+		v.addLine("# it will only be counted as 0.5 day when it comes to the annual day limit.");
 		v.addLine("#");
 		v.addLine("# Example:");
 		v.addLine("# 15/04/2019     # Monday on Easter week");

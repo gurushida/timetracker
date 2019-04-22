@@ -9,7 +9,7 @@
 This utility allows you to do simple time tracking so that you can know at any time
 what is your (worked time / expected work time) ratio. It works on the assumptions that you
 work from Monday to Friday, 7.5 hours a day, and that you have 25 days of vacation
-per year. It supports adding public holidays (with the possibility to declare half-days),
+per year (see \fBinit\fR for changing default values). It supports adding public holidays (with the possibility to declare half-days),
 declaring vacation days, days you stay home because you are sick and days you stay home
 because you take care of a sick child. In case you wonder how all these days off are even
 possible, this utility has been designed in a scandinavian country ;-)
@@ -34,12 +34,17 @@ with your remote repository.
 Prints some basic help.
 
 .TP
-\fBinit\fR <start>
+\fBinit\fR <start> [--vacations=<N>]
 Before you can do any time tracking, you need to initialize the time tracker with the init command.
 <start> is the date to start time tracking from in dd/mm/yyyy format. This date will be the
 reference point when it comes to calculating the balance between the time you should have worked
-and the worked time that you have reported.
-The init command creates a bookkeeping directory named .timetracker located in your home directory.
+and the worked time that you have reported. If --vacations is specified, <N> is an integer
+indicating the number of vacation days allowed per year. The default is 25 days. This value
+is only used a safety net to prevent you from accidentally registering too many
+vacation days on a given year.
+
+
+This command creates a bookkeeping directory named .timetracker located in your home directory.
 This directory is then turned into a git repository by invoking \fBgit init\fR to allow time
 tracking operations to be tracked themselves as git commits to ensure traceability.
 
@@ -77,7 +82,7 @@ is only meant to be used as a hint for humans.
 Registers a vacation day, given in dd/mm/yyyy format. Note that if the day is also registered
 as a half-holiday, the program will automatically take it into account and count it as 0.5 vacation
 instead of a full day. The program will abort if the day is already registered as a vacation day,
-is a week-end day, is a full public holiday or would exceed the yearly limit of 25 vacation days.
+is a week-end day, is a full public holiday or would exceed the yearly limit of vacation days.
 
 .TP
 \fBsick\fR <day>

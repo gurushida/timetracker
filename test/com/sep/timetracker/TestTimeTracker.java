@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Date;
 
 import org.junit.Test;
 
@@ -26,24 +25,24 @@ public class TestTimeTracker {
 
 	@Test
 	public void testCannotAddVacationDayTwice() throws ParseException, IOException {
-		TimeTracker t = new TimeTracker(new Date(), new ReportedTime(), new Holidays(), new Vacations("15/04/2019"), new SickDays(), new SickChildDays());
+		TimeTracker t = new TimeTracker(new Config(), new ReportedTime(), new Holidays(), new Vacations("15/04/2019"), new SickDays(), new SickChildDays());
 		assertNotNull(t.addVacationDay(Util.DAY_FORMAT.parse("15/04/2019")));
 	}
 
 	@Test
 	public void testCannotAddVacationDayOnHoliday() throws ParseException, IOException {
-		TimeTracker t = new TimeTracker(new Date(), new ReportedTime(), new Holidays("15/04/2019"), new Vacations(), new SickDays(), new SickChildDays());
+		TimeTracker t = new TimeTracker(new Config(), new ReportedTime(), new Holidays("15/04/2019"), new Vacations(), new SickDays(), new SickChildDays());
 		assertNotNull(t.addVacationDay(Util.DAY_FORMAT.parse("15/04/2019")));
 	}
 
 	@Test
 	public void testCanAddVacationDayOnHalfHoliday() throws ParseException, IOException {
-		TimeTracker t = new TimeTracker(new Date(), new ReportedTime(), new Holidays("15/04/2019 1/2"), new Vacations(), new SickDays(), new SickChildDays());
+		TimeTracker t = new TimeTracker(new Config(), new ReportedTime(), new Holidays("15/04/2019 1/2"), new Vacations(), new SickDays(), new SickChildDays());
 		assertNull(t.addVacationDay(Util.DAY_FORMAT.parse("15/04/2019")));
 	}
 
 	@Test
-	public void testCannotMoreThan25VacationDays1() throws ParseException, IOException {
+	public void testCannotHaveTooManyVacationDays1() throws ParseException, IOException {
 		// If we already have registered 25 vacation days for a year,
 		// we should not be able to add more
 		Vacations vacations = new Vacations(
@@ -77,12 +76,12 @@ public class TestTimeTracker {
 				"16/05/2019",
 				"17/05/2019"
 				);
-		TimeTracker t = new TimeTracker(new Date(), new ReportedTime(), new Holidays(), vacations, new SickDays(), new SickChildDays());
+		TimeTracker t = new TimeTracker(new Config(), new ReportedTime(), new Holidays(), vacations, new SickDays(), new SickChildDays());
 		assertNotNull(t.addVacationDay(Util.DAY_FORMAT.parse("12/04/2019")));
 	}
 
 	@Test
-	public void testCannotMoreThan25VacationDays2() throws ParseException, IOException {
+	public void testCannotHaveTooManyVacationDays2() throws ParseException, IOException {
 		// If we already have registered 25 vacation days for a year but 2 of them
 		// happen on half-work days, the total should count for 24 days and allow us
 		// to add one day more
@@ -121,12 +120,12 @@ public class TestTimeTracker {
 				"16/05/2019",
 				"17/05/2019"
 				);
-		TimeTracker t = new TimeTracker(new Date(), new ReportedTime(), holidays, vacations, new SickDays(), new SickChildDays());
+		TimeTracker t = new TimeTracker(new Config(), new ReportedTime(), holidays, vacations, new SickDays(), new SickChildDays());
 		assertNull(t.addVacationDay(Util.DAY_FORMAT.parse("12/04/2019")));
 	}
 
 	@Test
-	public void testCannotMoreThan25VacationDays3() throws ParseException, IOException {
+	public void testCannotHaveTooManyVacationDays3() throws ParseException, IOException {
 		// If we already have registered 25 vacation days for a year and 1 of them
 		// happens on a half-work day, the total should count for 24.5 days and should
 		// not allow us to add one day more on a regular work day
@@ -164,12 +163,12 @@ public class TestTimeTracker {
 				"16/05/2019",
 				"17/05/2019"
 				);
-		TimeTracker t = new TimeTracker(new Date(), new ReportedTime(), holidays, vacations, new SickDays(), new SickChildDays());
+		TimeTracker t = new TimeTracker(new Config(), new ReportedTime(), holidays, vacations, new SickDays(), new SickChildDays());
 		assertNotNull(t.addVacationDay(Util.DAY_FORMAT.parse("12/04/2019")));
 	}
 
 	@Test
-	public void testCannotMoreThan25VacationDays4() throws ParseException, IOException {
+	public void testCannotHaveTooManyVacationDays4() throws ParseException, IOException {
 		// If we already have registered 25 vacation days for a year and 1 of them
 		// happens on a half-work day, the total should count for 24.5 days and should
 		// allow us to add one day more on a half-work day
@@ -208,7 +207,7 @@ public class TestTimeTracker {
 				"16/05/2019",
 				"17/05/2019"
 				);
-		TimeTracker t = new TimeTracker(new Date(), new ReportedTime(), holidays, vacations, new SickDays(), new SickChildDays());
+		TimeTracker t = new TimeTracker(new Config(), new ReportedTime(), holidays, vacations, new SickDays(), new SickChildDays());
 		assertNull(t.addVacationDay(Util.DAY_FORMAT.parse("12/04/2019")));
 	}
 }

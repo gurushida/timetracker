@@ -10,7 +10,7 @@ import com.sep.timetracker.Holidays.HolidayType;
 
 public class TimeTracker {
 
-	private final Date trackingStart;
+	private final Config config;
 	private final ReportedTime reportedTime;
 	private final Holidays holidays;
 	private final Vacations vacations;
@@ -18,11 +18,11 @@ public class TimeTracker {
 	private final SickChildDays sickChildDays;
 	
 	public TimeTracker() throws ParseException {
-		this(new Date(), new ReportedTime(), new Holidays(), new Vacations(), new SickDays(), new SickChildDays());
+		this(new Config(), new ReportedTime(), new Holidays(), new Vacations(), new SickDays(), new SickChildDays());
 	}
 
 	public TimeTracker(File directory) throws ParseException, FileNotFoundException {
-		this(new Config(new File(directory, Config.FILENAME)).getTrackingStart(),
+		this(new Config(new File(directory, Config.FILENAME)),
 				new ReportedTime(new File(directory, ReportedTime.FILENAME)),
 				new Holidays(new File(directory, Holidays.FILENAME)),
 				new Vacations(new File(directory, Vacations.FILENAME)),
@@ -30,8 +30,8 @@ public class TimeTracker {
 				new SickChildDays(new File(directory, SickChildDays.FILENAME)));
 	}
 	
-	public TimeTracker(Date trackingStart, ReportedTime reportedTime, Holidays holidays, Vacations vacations, SickDays sickDays, SickChildDays sickChildDays) {
-		this.trackingStart = trackingStart;
+	public TimeTracker(Config config, ReportedTime reportedTime, Holidays holidays, Vacations vacations, SickDays sickDays, SickChildDays sickChildDays) {
+		this.config = config;
 		this.reportedTime = reportedTime;
 		this.holidays = holidays;
 		this.vacations = vacations;
@@ -40,7 +40,7 @@ public class TimeTracker {
 	}
 
 	public void printReport(Report report, Date dateEnd) throws ParseException {
-		Date dateStart = trackingStart;
+		Date dateStart = config.getTrackingStart();
 		if (dateStart.after(dateEnd)) {
 			System.err.println("Cannot print report: end date " + Util.DAY_FORMAT.format(dateEnd) + " is before start date " + Util.DAY_FORMAT.format(dateStart));
 			System.exit(1);
@@ -89,7 +89,8 @@ public class TimeTracker {
 		double days = balance / (double)Util.WORKING_DAY;
 		System.out.println();
 		System.out.println(String.format("So far this week: %.1fh/%.1fh worked", totalAmountWorkedThisWeek / 60.0, totalAmountDueThisWeek / 60.0));
-		System.out.println(String.format("Total overtime:   %.1f days (from %s to %s)", days, Util.DAY_FORMAT.format(trackingStart), Util.DAY_FORMAT.format(dateEnd)));
+		System.out.println(String.format("Total overtime:   %.1f days (from %s to %s)", days,
+				Util.DAY_FORMAT.format(config.getTrackingStart()), Util.DAY_FORMAT.format(dateEnd)));
 		System.out.println();
 	}
 
@@ -187,7 +188,7 @@ public class TimeTracker {
 	 * Adds the given date as a vacation day and returns null;
 	 * Does nothing and returns an error message if the given day is a week-end day,
 	 * is a full holiday day, is already a vacation day or if this
-	 * vacation day would overflow the 25 days/year limit.
+	 * vacation day would overflow the annual days/year limit.
 	 */
 	public String addVacationDay(Date d) throws ParseException, IOException {
 		if (Util.isWeekEndDay(d))  {
@@ -215,8 +216,9 @@ public class TimeTracker {
 			}
 		}
 		
-		if (vacationsDays > 25.0) {
-			return "Cannot add vacation day on " + Util.DAY_FORMAT.format(d) + " as it would exceed the 25 days per year limit";
+		if (vacationsDays > config.getVacationDaysPerYear()) {
+			return "Cannot add vacation day on " + Util.DAY_FORMAT.format(d) + " as it would exceed the "
+					+ config.getVacationDaysPerYear() + " vacation days per year limit";
 		}
 		
 		vacations.addVacationDay(d);
