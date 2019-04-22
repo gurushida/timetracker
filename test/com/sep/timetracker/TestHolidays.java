@@ -26,6 +26,21 @@ public class TestHolidays {
 	}
 
 	@Test
+	public void testRemoveHolidays() throws ParseException {
+		Holidays h = new Holidays("18/03/2010 1/2", "19/03/2010", "removed 18/03/2010", "removed 19/03/2010");
+		assertEquals(HolidayType.NOT_HOLIDAY, h.isHoliday("18/03/2010"));
+		assertEquals(HolidayType.NOT_HOLIDAY, h.isHoliday("19/03/2010"));
+	}
+
+	@Test
+	public void testRemoveAndReAddHolidays() throws ParseException {
+		Holidays h = new Holidays("18/03/2010 1/2", "19/03/2010", "removed 18/03/2010", "removed 19/03/2010", "18/03/2010", "19/03/2010 1/2");
+		assertEquals(HolidayType.HOLIDAY, h.isHoliday("18/03/2010"));
+		assertEquals(HolidayType.HALF_DAY, h.isHoliday("19/03/2010"));
+	}
+
+
+	@Test
 	public void testBadHolidays1() throws ParseException {
 		try {
 			new Holidays("foobar");

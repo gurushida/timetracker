@@ -18,6 +18,7 @@ public class Holidays extends TimeInfoManager {
 	}
 	
 	public static final String FILENAME = "holidays";
+	private final static String REMOVED_PREFIX = "removed ";
 
 	private final Map<String, Boolean> map = new HashMap<>();
 	private final Map<String, String> description = new HashMap<>();
@@ -39,13 +40,23 @@ public class Holidays extends TimeInfoManager {
 
 	@Override
 	protected void processLine(String line, String comment) throws ParseException {
+		boolean removed = line.startsWith(REMOVED_PREFIX);
+		if (removed) {
+			line = line.substring(REMOVED_PREFIX.length());
+		}
+
 		boolean halfDay = line.endsWith("1/2");
 		String dateRaw = line.split(" ")[0];
 		Date d = Util.DAY_FORMAT.parse(dateRaw);
 		String dateNormalized = Util.DAY_FORMAT.format(d);
-		map.put(dateNormalized, halfDay);
-		if (comment != null) {
-			description.put(dateNormalized, comment);
+		if (removed) {
+			map.remove(dateNormalized);
+			description.remove(dateNormalized);
+		} else {
+			map.put(dateNormalized, halfDay);
+			if (comment != null) {
+				description.put(dateNormalized, comment);
+			}
 		}
 	}
 	
@@ -102,6 +113,10 @@ public class Holidays extends TimeInfoManager {
 			sb.append(" # ").append(description);
 		}
 		addLine(sb.toString());
+	}
+
+	public void removeHoliday(Date d) throws IOException {
+		addLine(REMOVED_PREFIX + Util.DAY_FORMAT.format(d));
 	}
 
 }

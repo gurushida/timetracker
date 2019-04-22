@@ -279,6 +279,7 @@ public class Main {
 		pos++;
 		switch(type) {
 		case "vacation": break;
+		case "holiday": break;
 		default: {
 			System.err.println("Unsupported <type> value: " + type);
 			System.err.println();
@@ -302,7 +303,12 @@ public class Main {
 			return;
 		}
 
-		String err = timeTracker.removeVacationDay(d, force);
+		String err;
+		switch(type) {
+		case "vacation": err = timeTracker.removeVacationDay(d, force); break;
+		case "holiday": err = timeTracker.removeHoliday(d, force); break;
+		default: throw new IllegalStateException();
+		}
 		if (err != null) {
 			System.err.println(err);
 			System.err.println();

@@ -332,4 +332,20 @@ public class TimeTracker {
 		vacations.removeVacationDay(d);
 		return null;
 	}
+
+	/**
+	 * Removes the given holiday. Asks for confirmation unless force is true.
+	 * Returns null if the removal is done; otherwise returns an error message.
+	 */
+	public String removeHoliday(Date d, boolean force) throws IOException {
+		if (HolidayType.NOT_HOLIDAY == holidays.isHoliday(d)) {
+			return "Cannot remove " + Util.DAY_FORMAT.format(d) + " as it is not registered as a holiday !";
+		}
+		if (!force) {
+			Util.askForConfirmation("Are you sure you want to remove the " + (HolidayType.HALF_DAY == holidays.isHoliday(d) ? "half " : "")
+					+ "holiday " + Util.DAY_FORMAT.format(d) + " ?");
+		}
+		holidays.removeHoliday(d);
+		return null;
+	}
 }
