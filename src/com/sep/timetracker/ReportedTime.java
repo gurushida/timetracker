@@ -3,7 +3,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
-import java.time.Duration;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -39,12 +38,11 @@ public class ReportedTime extends TimeInfoManager {
 		Date start = Util.TIME_FORMAT.parse(parts[0].trim());
 		String normalizedStart = Util.DAY_FORMAT.format(start);
 		Date end = Util.TIME_FORMAT.parse(parts[1].trim());
-		Duration dur = Duration.between(start.toInstant(), end.toInstant());
-		long nMinutes = dur.toMinutes();
-		if (nMinutes < 0) {
+		long minutes = Util.between(start, end);
+		if (minutes < 0) {
 			throw new IllegalStateException("Reported time data contains invalid entry with end point before start point: " + line);
 		}
-		add(normalizedStart, nMinutes);
+		add(normalizedStart, minutes);
 	}
 
 	private void add(String date, long timeWorkedInMinutes) {
@@ -77,10 +75,10 @@ public class ReportedTime extends TimeInfoManager {
 		ReportedTime r = new ReportedTime(f);
 		r.addLine("# This file list all worked periods as time intervals in the following format:");
 		r.addLine("#");
-		r.addLine("# dd/mm/yyyy hh:mm z --> dd/mm/yyyy hh:mm z");
+		r.addLine("# dd/mm/yyyy hh:mm Z --> dd/mm/yyyy hh:mm Z");
 		r.addLine("#");
 		r.addLine("# Example:");
-		r.addLine("# 19/04/2019 22:00 CEST --> 19/04/2019 22:05 CEST # Forgot to push commit before leaving for week-end");
+		r.addLine("# 19/04/2019 22:00 +0200 --> 19/04/2019 22:05 +0200 # Forgot to push commit before leaving for week-end");
 		r.addLine("#");
 		r.addLine("# DON'T EDIT MANUALLY WITHOUT GREAT CARE !");
 		r.addLine("");

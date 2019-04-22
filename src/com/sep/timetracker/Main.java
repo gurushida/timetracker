@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 public class Main {
@@ -133,7 +132,7 @@ public class Main {
 		System.out.println();
 
 		GitUtil.addAllAndCommit(dir, msg);
-		new TimeTracker(dir).printReport(Report.WEEK);
+		new TimeTracker(dir).printReport(Report.WEEK, new Date());
 	}
 
 	private static void reportTime(TimeTracker timeTracker, String[] args) throws IOException, ParseException {
@@ -205,14 +204,14 @@ public class Main {
 		}
 		workedTime += minutes + " minute" + (minutes > 1 ? "s" : "");
 
-		Date end = Date.from(d.toInstant().plus(duration, ChronoUnit.MINUTES));
+		Date end = Util.addMinutes(d, duration);
 		timeTracker.reportWorkedTime(d, end, description);
 		String msg = "Reported worked time: " + workedTime;
 		System.out.println(msg);
 		System.out.println();
 
 		GitUtil.addAllAndCommit(dir, msg);
-		new TimeTracker(dir).printReport(Report.WEEK);
+		new TimeTracker(dir).printReport(Report.WEEK, new Date());
 	}
 
 	private static void addVacation(TimeTracker timeTracker, String[] args) throws ParseException, IOException {
@@ -349,6 +348,7 @@ public class Main {
 	}
 
 	private static void printReport(TimeTracker timeTracker, String[] args) throws ParseException {
+		Date reportEnd = null;
 		Report report = Report.WEEK;
 		if (args.length > 1) {
 			switch (args[1]) {
@@ -357,12 +357,34 @@ public class Main {
 			case "year": report = Report.YEAR; break;
 			case "all": report = Report.ALL; break;
 			default: {
-				System.err.println("Invalid value '" + args[1] + "'");
-				System.exit(1);
+				try {
+					reportEnd = Util.DAY_FORMAT.parse(args[1]);
+				} catch (ParseException e) {
+					System.err.println(args[1] + " is neither a valid dd/mm/yyyy date nor in [week, month, year, all]");
+					System.err.println();
+					System.exit(1);
+					// See comment in reportTime()
+					return;
+				}
 			}
 			}
 		}
-		timeTracker.printReport(report);
+		if (reportEnd == null) {
+			if (args.length > 2) {
+				try {
+					reportEnd = Util.DAY_FORMAT.parse(args[2]);
+				} catch (ParseException e) {
+					System.err.println(args[2] + " is not a valid dd/mm/yyyy date");
+					System.err.println();
+					System.exit(1);
+					// See comment in reportTime()
+					return;
+				}
+			} else {
+				reportEnd = new Date(); // now
+			}
+		}
+		timeTracker.printReport(report, reportEnd);
 	}
 
 	private static void initialize(String[] args) throws IOException, ParseException {
@@ -432,16 +454,19 @@ public class Main {
 		System.out.println();
 		System.out.println("  child <day>      Registers a sick child day given in dd/mm/yyyy format.");
 		System.out.println();
-		System.out.println("  report [<type>]  Prints a summary of the time tracking up until now. <type> can have the");
-		System.out.println("                   following values:");
+		System.out.println("  report [<type>] [<end>]");
+		System.out.println("                   Prints a summary of the time tracking up until now or <end> if specified in");
+		System.out.println("                   dd/mm/yyyy format. <type> can have the following values:");
+		System.out.println();
 		System.out.println("                     week   Prints the current week (default)");
 		System.out.println("                     month  Prints the current month");
 		System.out.println("                     year   Prints the current year");
 		System.out.println("                     all    Prints everyting since the time tracking began");
 		System.out.println();
-		System.out.println("                   --- Hours due and not worked");
-		System.out.println("                   ### Hours due and worked");
-		System.out.println("                   +++ Overtime hours");
+		System.out.println("                   Legend:");
+		System.out.println("                     ---    Hours due and not worked");
+		System.out.println("                     ###    Hours due and worked");
+		System.out.println("                     +++    Overtime hours (any time worked past the expected duration for the day)");
 		System.out.println();
 		System.out.println("  init <start>     Initializes time tracking. <start> is the date to start time tracking from");
 		System.out.println("                   in dd/mm/yyyy format.");

@@ -39,11 +39,11 @@ public class TimeTracker {
 		this.sickChildDays = sickChildDays;
 	}
 
-	public void printReport(Report report) throws ParseException {
+	public void printReport(Report report, Date dateEnd) throws ParseException {
 		Date dateStart = trackingStart;
-		Date dateEnd = new Date();
 		if (dateStart.after(dateEnd)) {
-			throw new IllegalArgumentException();
+			System.err.println("Cannot print report: end date " + Util.DAY_FORMAT.format(dateEnd) + " is before start date " + Util.DAY_FORMAT.format(dateStart));
+			System.exit(1);
 		}
 		String normalizedStart = Util.DAY_FORMAT.format(dateStart);
 		dateStart = Util.DAY_FORMAT.parse(normalizedStart);

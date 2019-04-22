@@ -15,10 +15,10 @@ public class TestReportedTime {
 	public void testReportedTime() throws ParseException {
 		ArrayList<String> list = new ArrayList<>();
 		list.add("# foobar");
-		list.add("12/03/2010 13:49 CEST --> 12/03/2010 13:59 CEST");
+		list.add("12/03/2010 13:49 +0100 --> 12/03/2010 13:59 +0100");
 		list.add("");
-		list.add("12/03/2010 16:49 CEST --> 12/03/2010 18:49 CEST");
-		list.add("12/03/2010 21:00 CEST --> 13/03/2010 01:00 CEST");
+		list.add("12/03/2010 16:49 +0100 --> 12/03/2010 18:49 +0100");
+		list.add("12/03/2010 21:00 +0100 --> 13/03/2010 01:00 +0100");
 		
 		ReportedTime rt = new ReportedTime(list);
 		assertEquals(370, rt.getTimeWorkedInMinutes("12/03/2010"));
@@ -37,7 +37,7 @@ public class TestReportedTime {
 	@Test
 	public void testBadReportedTime2() throws ParseException {
 		try {
-			new ReportedTime("12/03/2010 13:49 CEST --> ");
+			new ReportedTime("12/03/2010 13:49 +0100 --> ");
 		} catch (Throwable e) {
 			return;
 		}
@@ -47,7 +47,7 @@ public class TestReportedTime {
 	@Test
 	public void testBadReportedTime3() throws ParseException {
 		try {
-			new ReportedTime("12/03/2010 13:49 CEST -> 12/03/2010 13:59 CEST");
+			new ReportedTime("12/03/2010 13:49 +0100 -> 12/03/2010 13:59 +0100");
 		} catch (Throwable e) {
 			return;
 		}
@@ -57,7 +57,7 @@ public class TestReportedTime {
 	@Test
 	public void testBadReportedTime4() throws ParseException {
 		try {
-			new ReportedTime("12/03/2010 13:49 CEST --> 10/03/2010 13:59 CEST");
+			new ReportedTime("12/03/2010 13:49 +0100 --> 10/03/2010 13:59 +0100");
 		} catch (Throwable e) {
 			return;
 		}

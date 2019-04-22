@@ -1,6 +1,7 @@
 package com.sep.timetracker;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -16,7 +17,7 @@ public class Util {
 
 	public final static DateFormat DAY_OF_WEEK_FORMAT = new SimpleDateFormat("EEEE", Locale.ENGLISH);
 	public final static DateFormat DAY_FORMAT = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-	public final static DateFormat TIME_FORMAT = new SimpleDateFormat("dd/MM/yyyy HH:mm z", Locale.ENGLISH);
+	public final static DateFormat TIME_FORMAT = new SimpleDateFormat("dd/MM/yyyy HH:mm Z", Locale.ENGLISH);
 
 	private final static Pattern DURATION = Pattern.compile("^([0-9]+):([0-5][0-9])$");
 	private final static Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
@@ -29,6 +30,21 @@ public class Util {
 		return list.iterator();
 	}
 	
+	/**
+	 * Returns the duration in minutes elapsed between the given dates, taking
+	 * daylight saving changes into account.
+	 */
+	public static long between(Date a, Date b) {
+		return (b.getTime() - a.getTime()) / (1000 * 60);
+	}
+
+	/**
+	 * Returns the date obtained when adding the given duration to given date.
+	 */
+	public static Date addMinutes(Date d, long minutes) {
+		return Date.from(d.toInstant().plus(minutes, ChronoUnit.MINUTES));
+	}
+
 	public static boolean isWeekEndDay(Date d) {
 		calendar.setTime(d);
 		int day = calendar.get(Calendar.DAY_OF_WEEK);

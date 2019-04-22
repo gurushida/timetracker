@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import com.sep.timetracker.Holidays;
 import com.sep.timetracker.Holidays.HolidayType;
 
 public class TestHolidays {
