@@ -34,7 +34,16 @@ public class Main {
 			return;
 		}
 
-		TimeTracker timeTracker = new TimeTracker(dir);
+		TimeTracker timeTracker;
+		try {
+			timeTracker = new TimeTracker(dir);
+		} catch (Exception e) {
+			System.err.println("Internal error: " + e.getMessage());
+			System.err.println("Your configuration folder is likely corrupted ! You should try to revert it to a valid state using git.");
+			System.err.println();
+			System.exit(1);
+			return;
+		}
 
 		switch(args[0]) {
 		case "help": printHelp(); return;
@@ -413,7 +422,7 @@ public class Main {
 		}
 		dir.mkdir();
 
-		TrackingStart.initialize(new File(dir, TrackingStart.FILENAME), d);
+		Config.initialize(new File(dir, Config.FILENAME), d);
 		Holidays.initialize(new File(dir, Holidays.FILENAME));
 		Vacations.initialize(new File(dir, Vacations.FILENAME));
 		SickDays.initialize(new File(dir, SickDays.FILENAME));

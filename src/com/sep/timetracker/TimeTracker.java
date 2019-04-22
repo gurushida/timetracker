@@ -22,7 +22,7 @@ public class TimeTracker {
 	}
 
 	public TimeTracker(File directory) throws ParseException, FileNotFoundException {
-		this(new TrackingStart(new File(directory, TrackingStart.FILENAME)).getTrackingStart(),
+		this(new Config(new File(directory, Config.FILENAME)).getTrackingStart(),
 				new ReportedTime(new File(directory, ReportedTime.FILENAME)),
 				new Holidays(new File(directory, Holidays.FILENAME)),
 				new Vacations(new File(directory, Vacations.FILENAME)),
