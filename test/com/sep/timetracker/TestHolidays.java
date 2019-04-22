@@ -39,7 +39,6 @@ public class TestHolidays {
 		assertEquals(HolidayType.HALF_DAY, h.isHoliday("19/03/2010"));
 	}
 
-
 	@Test
 	public void testBadHolidays1() throws ParseException {
 		try {

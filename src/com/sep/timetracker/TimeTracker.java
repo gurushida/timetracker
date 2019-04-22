@@ -378,4 +378,32 @@ public class TimeTracker {
 		sickDays.removeSickDay(d);
 		return null;
 	}
+
+	/**
+	 * Removes all the registered worked time for the given day. Asks for confirmation unless force is true.
+	 * Returns null if the removal is done; otherwise returns an error message.
+	 */
+	public String removeWorkedDay(Date d, boolean force) throws IOException {
+		long duration = reportedTime.getTimeWorkedInMinutes(d);
+		if (duration == 0) {
+			return "Cannot remove " + Util.DAY_FORMAT.format(d) + " as there is no worked time registered for this day !";
+		}
+		if (!force) {
+			long hours = duration / 60;
+			long minutes = duration % 60;
+			String workedTime = "";
+			if (hours > 1) {
+				workedTime = hours + " hours and ";
+			} else if (hours == 1) {
+				workedTime = "1 hour and ";
+			} else {
+				workedTime = "";
+			}
+			workedTime += minutes + " minute" + (minutes > 1 ? "s" : "");
+
+			Util.askForConfirmation("Are you sure you want to remove all the time registered for " + Util.DAY_FORMAT.format(d) + " (" + workedTime + ") ?");
+		}
+		reportedTime.removeWorkedDay(d);
+		return null;
+	}
 }

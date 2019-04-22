@@ -7,8 +7,6 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import com.sep.timetracker.ReportedTime;
-
 public class TestReportedTime {
 
 	@Test
@@ -19,9 +17,34 @@ public class TestReportedTime {
 		list.add("");
 		list.add("12/03/2010 16:49 +0100 --> 12/03/2010 18:49 +0100");
 		list.add("12/03/2010 21:00 +0100 --> 13/03/2010 01:00 +0100");
-		
+
 		ReportedTime rt = new ReportedTime(list);
 		assertEquals(370, rt.getTimeWorkedInMinutes("12/03/2010"));
+	}
+
+	@Test
+	public void testRemoveWorkedDay() throws ParseException {
+		ArrayList<String> list = new ArrayList<>();
+		list.add("12/03/2010 13:49 +0100 --> 12/03/2010 13:59 +0100");
+		list.add("12/03/2010 16:49 +0100 --> 12/03/2010 18:49 +0100");
+		list.add("12/03/2010 21:00 +0100 --> 13/03/2010 01:00 +0100");
+		list.add("removed 12/03/2010");
+
+		ReportedTime rt = new ReportedTime(list);
+		assertEquals(0, rt.getTimeWorkedInMinutes("12/03/2010"));
+	}
+
+	@Test
+	public void testRemoveWorkedDayAndReAddTime() throws ParseException {
+		ArrayList<String> list = new ArrayList<>();
+		list.add("12/03/2010 13:49 +0100 --> 12/03/2010 13:59 +0100");
+		list.add("12/03/2010 16:49 +0100 --> 12/03/2010 18:49 +0100");
+		list.add("12/03/2010 21:00 +0100 --> 13/03/2010 01:00 +0100");
+		list.add("removed 12/03/2010");
+		list.add("12/03/2010 21:00 +0100 --> 12/03/2010 22:05 +0100");
+
+		ReportedTime rt = new ReportedTime(list);
+		assertEquals(65, rt.getTimeWorkedInMinutes("12/03/2010"));
 	}
 
 	@Test

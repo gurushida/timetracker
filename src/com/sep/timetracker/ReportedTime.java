@@ -13,6 +13,7 @@ import java.util.Map;
 public class ReportedTime extends TimeInfoManager {
 
 	public static final String FILENAME = "reported_time";
+	private final static String REMOVED_PREFIX = "removed ";
 	private final Map<String, Long> map = new HashMap<>();
 	private final Map<String, ArrayList<String>> description = new HashMap<>();
 
@@ -34,6 +35,16 @@ public class ReportedTime extends TimeInfoManager {
 
 	@Override
 	protected void processLine(String line, String comment) throws ParseException {
+		boolean removed = line.startsWith(REMOVED_PREFIX);
+		if (removed) {
+			line = line.substring(REMOVED_PREFIX.length());
+			Date d = Util.DAY_FORMAT.parse(line);
+			String normalized = Util.DAY_FORMAT.format(d);
+			map.remove(normalized);
+			description.remove(normalized);
+			return;
+		}
+
 		String[] parts = line.split("-->");
 		if (parts.length != 2) {
 			throw new IllegalStateException("Reported time data contains invalid entry: " + line);
@@ -110,5 +121,9 @@ public class ReportedTime extends TimeInfoManager {
 			b.append(" # ").append(description);
 		}
 		addLine(b.toString());
+	}
+
+	public void removeWorkedDay(Date d) throws IOException {
+		addLine(REMOVED_PREFIX + Util.DAY_FORMAT.format(d));
 	}
 }

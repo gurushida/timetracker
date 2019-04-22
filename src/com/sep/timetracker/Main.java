@@ -282,6 +282,7 @@ public class Main {
 		case "holiday": break;
 		case "child": break;
 		case "sick": break;
+		case "worked": break;
 		default: {
 			System.err.println("Unsupported <type> value: " + type);
 			System.err.println();
@@ -312,6 +313,7 @@ public class Main {
 		case "holiday": err = timeTracker.removeHoliday(d, force); break;
 		case "child": displayableType = "sick child"; err = timeTracker.removeSickChildDay(d, force); break;
 		case "sick": err = timeTracker.removeSickDay(d, force); break;
+		case "worked": err = timeTracker.removeWorkedDay(d, force); break;
 		default: throw new IllegalStateException();
 		}
 		if (err != null) {
