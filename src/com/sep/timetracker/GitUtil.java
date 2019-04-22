@@ -28,9 +28,9 @@ public class GitUtil {
 	public static void checkUncommittedChanges(File directory) {
 		Result r = ExecUtil.execute(directory, "git", "status", "--porcelain=1");
 		if (!r.stdout.isEmpty()) {
-			System.out.println("There are uncommitted changes in " + directory.getAbsolutePath() +" !");
-			System.out.println("You need to review them and either revert or commit these modifications.");
-			System.exit(0);
+			System.err.println("There are uncommitted changes in " + directory.getAbsolutePath() +" !");
+			System.err.println("You need to review them and either revert or commit these modifications.");
+			System.exit(1);
 		}
 	}
 

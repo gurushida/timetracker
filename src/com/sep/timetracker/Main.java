@@ -13,16 +13,16 @@ public class Main {
 
 	public static void main(String[] args) throws ParseException, IOException {
 		if (!GitUtil.isGitPresent()) {
-			System.out.println("git not found ! This time tracker application needs git to work as intended.");
-			System.out.println();
-			return;
+			System.err.println("git not found ! This time tracker application needs git to work as intended.");
+			System.err.println();
+			System.exit(1);
 		}
 
 		if (!dir.exists() && (args.length == 0 || !"init".equals(args[0]))) {
-			System.out.println("Time tracker configuration not found !\n");
-			System.out.println("Initialize it with 'init <start>' where <start> is the date to start time tracking from in dd/mm/yyyy format");
-			System.out.println();
-			return;
+			System.err.println("Time tracker configuration not found !\n");
+			System.err.println("Initialize it with 'init <start>' where <start> is the date to start time tracking from in dd/mm/yyyy format");
+			System.err.println();
+			System.exit(1);
 		}
 
 		if (args.length == 0) {
@@ -47,17 +47,20 @@ public class Main {
 		case "start": startTimeTracking(); return;
 		case "stop": stopTimeTracking(timeTracker, args); return;
 		case "add": reportTime(timeTracker, args); return;
-		default: System.out.println("Unknown command: '" + args[0] + "'"); return;
+		default: {
+			System.err.println("Unknown command: '" + args[0] + "'");
+			System.exit(1);
+		}
 		}
 	}
 
 	private static void startTimeTracking() throws IOException, ParseException {
 		File f = new File(dir, CurrentTrackingStart.FILENAME);
 		if (f.exists()) {
-			System.out.println("There is already a time tracking session going on !");
-			System.out.println("You must stop it before you can start a new one.");
-			System.out.println();
-			return;
+			System.err.println("There is already a time tracking session going on !");
+			System.err.println("You must stop it before you can start a new one.");
+			System.err.println();
+			System.exit(1);
 		}
 
 		Date now = new Date();
@@ -75,34 +78,33 @@ public class Main {
 
 		File f = new File(dir, CurrentTrackingStart.FILENAME);
 		if (!f.exists()) {
-			System.out.println("There is no time tracking session going on !");
-			System.out.println();
-			return;
+			System.err.println("There is no time tracking session going on !");
+			System.err.println();
+			System.exit(1);
 		}
 
 		CurrentTrackingStart c = new CurrentTrackingStart(f);
 		Date start = c.getCurrentTrackingStart();
 		Date now = new Date();
 		if (!now.after(start)) {
-			System.out.println("The start of the current time tracking session is in the future: " + Util.TIME_FORMAT.format(start) + " !");
-			System.out.println("Travel in time, delete " + f.getAbsolutePath() + " or fix this file manually with great care.");
-			System.out.println();
-			return;
+			System.err.println("The start of the current time tracking session is in the future: " + Util.TIME_FORMAT.format(start) + " !");
+			System.err.println("Travel in time, delete " + f.getAbsolutePath() + " or fix this file manually with great care.");
+			System.err.println();
+			System.exit(1);
 		}
 
 		Duration dur = Duration.between(start.toInstant(), now.toInstant());
 		if (dur.toHours() >= 24) {
-			System.out.println("More than 24 hours have elapsed since the start of the current time tracking session: " + Util.TIME_FORMAT.format(start));
-			System.out.println("This cannot be correct, so either delete " + f.getAbsolutePath() + " or fix this file manually with great care.");
-			System.out.println();
-			return;
+			System.err.println("More than 24 hours have elapsed since the start of the current time tracking session: " + Util.TIME_FORMAT.format(start));
+			System.err.println("This is highly unlikely to be correct, so either delete " + f.getAbsolutePath() + " or fix this file manually with great care.");
+			System.exit(1);
 		}
 
 		if (!force && !Util.DAY_FORMAT.format(start).equals(Util.DAY_FORMAT.format(now))) {
-			System.out.println("The current time tracking session did not start today: " + Util.TIME_FORMAT.format(start));
-			System.out.println("Re-run with stop --force [description] if this is not a mistake");
-			System.out.println();
-			return;
+			System.err.println("The current time tracking session did not start today: " + Util.TIME_FORMAT.format(start));
+			System.err.println("Re-run with stop --force [description] if this is not a mistake");
+			System.err.println();
+			System.exit(1);
 		}
 
 		long hours = dur.toMinutes() / 60;
@@ -118,10 +120,10 @@ public class Main {
 		workedTime += minutes + " minute" + (minutes > 1 ? "s" : "");
 
 		if (!force && dur.toHours() >= 10) {
-			System.out.println("The reported worked time would be " + workedTime);
-			System.out.println("Re-run with stop --force [description] if this is not a mistake");
-			System.out.println();
-			return;
+			System.err.println("The reported worked time would be " + workedTime);
+			System.err.println("Re-run with stop --force [description] if this is not a mistake");
+			System.err.println();
+			System.exit(1);
 		}
 
 		f.delete();
@@ -140,45 +142,49 @@ public class Main {
 		boolean force = args.length > 1 && "--force".equals(args[1]);
 		int argPos = force ? 2 : 1;
 		if (argPos == args.length) {
-			System.out.println("Missing <day> argument");
-			System.out.println();
-			return;
+			System.err.println("Missing <day> argument");
+			System.err.println();
+			System.exit(1);
 		}
 
 		Date d;
 		try {
 			d = Util.DAY_FORMAT.parse(args[argPos]);
 		} catch (ParseException e) {
-			System.out.println(args[argPos] + " is not a valid dd/mm/yyyy date");
-			System.out.println();
+			System.err.println(args[argPos] + " is not a valid dd/mm/yyyy date");
+			System.err.println();
+			System.exit(1);
+			// The compiler is not smart enough to figure out that System.exit()
+			// means leaving the method so we need a return to prevent it
+			// from complaining below about d not being initialized
 			return;
 		}
 
 		argPos++;
 
 		if (argPos == args.length) {
-			System.out.println("Missing <duration> argument");
-			System.out.println();
-			return;
+			System.err.println("Missing <duration> argument");
+			System.err.println();
+			System.exit(1);
 		}
 		Integer duration = Util.getDurationInMinutes(args[argPos]);
 		if (duration == null) {
-			System.out.println(args[argPos] + " is not a valid hh:mm duration");
-			System.out.println();
-			return;
+			System.err.println(args[argPos] + " is not a valid hh:mm duration");
+			System.err.println();
+			System.exit(1);
 		}
 
 		if (duration >= 24 * 60) {
-			System.out.println(args[argPos] + " is greater than 24 hours. This cannot be correct.");
-			System.out.println();
-			return;
+			System.err.println(args[argPos] + " is larger than 24 hours. This is highly unlikely be correct.");
+			System.err.println();
+			System.exit(1);
 		}
 
 		if (!force && duration >= 10 * 60) {
-			System.out.println("The reported worked time is greater than 10 hours.");
-			System.out.println("Re-run with add --force <day> <duration> [description] if this is not a mistake");
-			System.out.println();
-			return;
+			System.err.println("The reported worked time is greater than 10 hours.");
+			System.err.println("Re-run with add --force <day> <duration> [description] if this is not a mistake");
+			System.err.println();
+			System.exit(1);
 		}
 
 		argPos++;
@@ -212,23 +218,26 @@ public class Main {
 	private static void addVacation(TimeTracker timeTracker, String[] args) throws ParseException, IOException {
 		GitUtil.checkUncommittedChanges(dir);
 		if (args.length < 2) {
-			System.out.println("Missing <day> argument");
-			System.out.println();
-			return;
+			System.err.println("Missing <day> argument");
+			System.err.println();
+			System.exit(1);
 		}
 
 		Date d;
 		try {
 			d = Util.DAY_FORMAT.parse(args[1]);
 		} catch (ParseException e) {
-			System.out.println(args[1] + " is not a valid dd/mm/yyyy date");
-			System.out.println();
+			System.err.println(args[1] + " is not a valid dd/mm/yyyy date");
+			System.err.println();
+			System.exit(1);
+			// See comment in reportTime()
 			return;
 		}
 		String err = timeTracker.addVacationDay(d);
 		if (err != null) {
-			System.out.println(err);
-			return;
+			System.err.println(err);
+			System.err.println();
+			System.exit(1);
 		}
 		String msg = "Vacation day added for " + args[1];
 		System.out.println(msg);
@@ -239,23 +248,26 @@ public class Main {
 	private static void addSickDay(TimeTracker timeTracker, String[] args) throws ParseException, IOException {
 		GitUtil.checkUncommittedChanges(dir);
 		if (args.length < 2) {
-			System.out.println("Missing <day> argument");
-			System.out.println();
-			return;
+			System.err.println("Missing <day> argument");
+			System.err.println();
+			System.exit(1);
 		}
 
 		Date d;
 		try {
 			d = Util.DAY_FORMAT.parse(args[1]);
 		} catch (ParseException e) {
-			System.out.println(args[1] + " is not a valid dd/mm/yyyy date");
-			System.out.println();
+			System.err.println(args[1] + " is not a valid dd/mm/yyyy date");
+			System.err.println();
+			// See comment in reportTime()
+			System.exit(1);
 			return;
 		}
 		String err = timeTracker.addSickDay(d);
 		if (err != null) {
-			System.out.println(err);
-			return;
+			System.err.println(err);
+			System.err.println();
+			System.exit(1);
 		}
 		String msg = "Sick day added for " + args[1];
 		System.out.println(msg);
@@ -266,23 +278,26 @@ public class Main {
 	private static void addSickChildDay(TimeTracker timeTracker, String[] args) throws ParseException, IOException {
 		GitUtil.checkUncommittedChanges(dir);
 		if (args.length < 2) {
-			System.out.println("Missing <day> argument");
-			System.out.println();
-			return;
+			System.err.println("Missing <day> argument");
+			System.err.println();
+			System.exit(1);
 		}
 
 		Date d;
 		try {
 			d = Util.DAY_FORMAT.parse(args[1]);
 		} catch (ParseException e) {
-			System.out.println(args[1] + " is not a valid dd/mm/yyyy date");
-			System.out.println();
+			System.err.println(args[1] + " is not a valid dd/mm/yyyy date");
+			System.err.println();
+			System.exit(1);
+			// See comment in reportTime()
 			return;
 		}
 		String err = timeTracker.addSickChildDay(d);
 		if (err != null) {
-			System.out.println(err);
-			return;
+			System.err.println(err);
+			System.err.println();
+			System.exit(1);
 		}
 		String msg = "Sick child day added for " + args[1];
 		System.out.println(msg);
@@ -300,17 +315,19 @@ public class Main {
 			halfDay = true;
 		}
 		if (pos == args.length) {
-			System.out.println("Missing <day> argument");
-			System.out.println();
-			return;
+			System.err.println("Missing <day> argument");
+			System.err.println();
+			System.exit(1);
 		}
 
 		Date d;
 		try {
 			d = Util.DAY_FORMAT.parse(args[pos]);
 		} catch (ParseException e) {
-			System.out.println(args[1] + " is not a valid dd/mm/yyyy date");
-			System.out.println();
+			System.err.println(args[1] + " is not a valid dd/mm/yyyy date");
+			System.err.println();
+			System.exit(1);
+			// See comment in reportTime()
 			return;
 		}
 		pos++;
@@ -321,8 +338,9 @@ public class Main {
 
 		String err = timeTracker.addHoliday(d, halfDay, description);
 		if (err != null) {
-			System.out.println(err);
-			return;
+			System.err.println(err);
+			System.err.println();
+			System.exit(1);
 		}
 		String msg = "Public " + (halfDay ? "1/2 " : "") + "holiday added for " + Util.DAY_FORMAT.format(d);
 		System.out.println(msg);
@@ -338,7 +356,10 @@ public class Main {
 			case "month": report = Report.MONTH; break;
 			case "year": report = Report.YEAR; break;
 			case "all": report = Report.ALL; break;
-			default: System.out.println("Invalid value '" + args[1] + "'"); return;
+			default: {
+				System.err.println("Invalid value '" + args[1] + "'");
+				System.exit(1);
+			}
 			}
 		}
 		timeTracker.printReport(report);
@@ -346,24 +367,26 @@ public class Main {
 
 	private static void initialize(String[] args) throws IOException, ParseException {
 		if (dir.exists()) {
-			System.out.println("Configuration already exists !");
-			System.out.println("If you are sure to want to replace it and lose all your data, you need to manually delete the directory " + dir.getAbsolutePath());
-			System.out.println();
-			return;
+			System.err.println("Configuration already exists !");
+			System.err.println("If you are sure to want to replace it and lose all your data, you need to manually delete the directory " + dir.getAbsolutePath());
+			System.err.println();
+			System.exit(1);
 		}
 
 		if (args.length < 2) {
-			System.out.println("Missing <start> argument");
-			System.out.println();
-			return;
+			System.err.println("Missing <start> argument");
+			System.err.println();
+			System.exit(1);
 		}
 
 		Date d;
 		try {
 			d = Util.DAY_FORMAT.parse(args[1]);
 		} catch (ParseException e) {
-			System.out.println(args[1] + " is not a valid dd/mm/yyyy date");
-			System.out.println();
+			System.err.println(args[1] + " is not a valid dd/mm/yyyy date");
+			System.err.println();
+			System.exit(1);
+			// See comment in reportTime()
 			return;
 		}
 		dir.mkdir();
