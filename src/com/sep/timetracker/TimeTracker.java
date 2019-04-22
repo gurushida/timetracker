@@ -363,4 +363,19 @@ public class TimeTracker {
 		sickChildDays.removeSickChildDay(d);
 		return null;
 	}
+
+	/**
+	 * Removes the given sick day. Asks for confirmation unless force is true.
+	 * Returns null if the removal is done; otherwise returns an error message.
+	 */
+	public String removeSickDay(Date d, boolean force) throws IOException {
+		if (!sickDays.isSickDay(d)) {
+			return "Cannot remove " + Util.DAY_FORMAT.format(d) + " as it is not registered as a sick day !";
+		}
+		if (!force) {
+			Util.askForConfirmation("Are you sure you want to remove the sick day " + Util.DAY_FORMAT.format(d) + " ?");
+		}
+		sickDays.removeSickDay(d);
+		return null;
+	}
 }
