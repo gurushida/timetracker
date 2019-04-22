@@ -439,8 +439,8 @@ public class Main {
 		System.out.println("                     year   Prints the current year");
 		System.out.println("                     all    Prints everyting since the time tracking began");
 		System.out.println();
-		System.out.println("                   \u2591\u2591\u2591 Hours due and not worked");
-		System.out.println("                   \u2588\u2588\u2588 Hours due and worked");
+		System.out.println("                   --- Hours due and not worked");
+		System.out.println("                   ### Hours due and worked");
 		System.out.println("                   +++ Overtime hours");
 		System.out.println();
 		System.out.println("  init <start>     Initializes time tracking. <start> is the date to start time tracking from");

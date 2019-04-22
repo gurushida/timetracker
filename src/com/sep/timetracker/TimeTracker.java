@@ -125,14 +125,14 @@ public class TimeTracker {
 		long delta = hourQuartersWorked - hourQuartersDue;
 		if (delta <= 0) {
 			for (int i = 0 ; i < hourQuartersWorked ; i++) {
-				b.append("\u2588");
+				b.append("#");
 			}
 			for (int i = 0 ; i < -delta ; i++) {
-				b.append("\u2591");
+				b.append("-");
 			} 
 		} else {
 			for (int i = 0 ; i < hourQuartersDue ; i++) {
-				b.append("\u2588");
+				b.append("#");
 			}
 			for (int i = 0 ; i < delta ; i++) {
 				b.append("+");
