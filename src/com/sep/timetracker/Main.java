@@ -144,7 +144,7 @@ public class Main {
 		System.out.println();
 
 		GitUtil.addAllAndCommit(dir, msg);
-		new TimeTracker(dir).printReport(Report.WEEK, new Date());
+		new TimeTracker(dir).printReport(Report.WEEK, new Date(), false);
 	}
 
 	private static void reportTime(TimeTracker timeTracker, String[] args) throws IOException, ParseException {
@@ -223,7 +223,7 @@ public class Main {
 		System.out.println();
 
 		GitUtil.addAllAndCommit(dir, msg);
-		new TimeTracker(dir).printReport(Report.WEEK, new Date());
+		new TimeTracker(dir).printReport(Report.WEEK, new Date(), false);
 	}
 
 	private static void addVacation(TimeTracker timeTracker, String[] args) throws ParseException, IOException {
@@ -362,17 +362,24 @@ public class Main {
 	private static void printReport(TimeTracker timeTracker, String[] args) throws ParseException {
 		Date reportEnd = null;
 		Report report = Report.WEEK;
-		if (args.length > 1) {
-			switch (args[1]) {
-			case "week": break;
-			case "month": report = Report.MONTH; break;
-			case "year": report = Report.YEAR; break;
-			case "all": report = Report.ALL; break;
+		boolean printComments = false;
+		int pos = 1;
+		if (pos < args.length && ("-v".equals(args[pos]) || "--verbose".equals(args[pos]))) {
+			printComments = true;
+			pos++;
+		}
+
+		if (pos < args.length) {
+			switch (args[pos]) {
+			case "week": pos++; break;
+			case "month": pos++; report = Report.MONTH; break;
+			case "year": pos++; report = Report.YEAR; break;
+			case "all": pos++; report = Report.ALL; break;
 			default: {
 				try {
-					reportEnd = Util.DAY_FORMAT.parse(args[1]);
+					reportEnd = Util.DAY_FORMAT.parse(args[pos]);
 				} catch (ParseException e) {
-					System.err.println(args[1] + " is neither a valid dd/mm/yyyy date nor in [week, month, year, all]");
+					System.err.println(args[pos] + " is neither a valid dd/mm/yyyy date nor in [week, month, year, all]");
 					System.err.println();
 					System.exit(1);
 					// See comment in reportTime()
@@ -382,11 +389,11 @@ public class Main {
 			}
 		}
 		if (reportEnd == null) {
-			if (args.length > 2) {
+			if (pos < args.length) {
 				try {
-					reportEnd = Util.DAY_FORMAT.parse(args[2]);
+					reportEnd = Util.DAY_FORMAT.parse(args[pos]);
 				} catch (ParseException e) {
-					System.err.println(args[2] + " is not a valid dd/mm/yyyy date");
+					System.err.println(args[pos] + " is not a valid dd/mm/yyyy date");
 					System.err.println();
 					System.exit(1);
 					// See comment in reportTime()
@@ -396,7 +403,7 @@ public class Main {
 				reportEnd = new Date(); // now
 			}
 		}
-		timeTracker.printReport(report, reportEnd);
+		timeTracker.printReport(report, reportEnd, printComments);
 	}
 
 	private static void initialize(String[] args) throws IOException, ParseException {
@@ -465,7 +472,7 @@ public class Main {
 		System.out.println("                   meant as a hint for humans.");
 		System.out.println();
 		System.out.println("  add <day> <duration> [description]");
-		System.out.println("                   Registers an amount of worked item. <day> is given in dd/mm/yyyy format.");
+		System.out.println("                   Registers an amount of worked time. <day> is given in dd/mm/yyyy format.");
 		System.out.println("                   <duration> is the amount of worked time in the hh:mm format. The description");
 		System.out.println("                   is optional and is only meant as a hint for humans.");
 		System.out.println();
@@ -480,9 +487,10 @@ public class Main {
 		System.out.println();
 		System.out.println("  child <day>      Registers a sick child day given in dd/mm/yyyy format.");
 		System.out.println();
-		System.out.println("  report [<type>] [<end>]");
+		System.out.println("  report [-v|--verbose] [<type>] [<end>]");
 		System.out.println("                   Prints a summary of the time tracking up until now or <end> if specified in");
-		System.out.println("                   dd/mm/yyyy format. <type> can have the following values:");
+		System.out.println("                   dd/mm/yyyy format. If -v is specified, the comments for a day, if any, are");
+		System.out.println("                   printed after the report for this day. <type> can have the following values:");
 		System.out.println();
 		System.out.println("                     week   Prints the current week (default)");
 		System.out.println("                     month  Prints the current month");

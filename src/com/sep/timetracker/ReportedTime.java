@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,8 @@ public class ReportedTime extends TimeInfoManager {
 
 	public static final String FILENAME = "reported_time";
 	private final Map<String, Long> map = new HashMap<>();
+	private final Map<String, ArrayList<String>> description = new HashMap<>();
+
 	
 	public ReportedTime(File f) throws ParseException, FileNotFoundException {
 		super(f);
@@ -30,7 +33,7 @@ public class ReportedTime extends TimeInfoManager {
 	}
 
 	@Override
-	protected void processLine(String line) throws ParseException {
+	protected void processLine(String line, String comment) throws ParseException {
 		String[] parts = line.split("-->");
 		if (parts.length != 2) {
 			throw new IllegalStateException("Reported time data contains invalid entry: " + line);
@@ -43,6 +46,20 @@ public class ReportedTime extends TimeInfoManager {
 			throw new IllegalStateException("Reported time data contains invalid entry with end point before start point: " + line);
 		}
 		add(normalizedStart, minutes);
+
+		if (comment != null) {
+			ArrayList<String> list = description.get(normalizedStart);
+			if (list == null) {
+				list = new ArrayList<String>();
+				description.put(normalizedStart, list);
+			}
+			list.add(comment);
+		}
+	}
+
+	public List<String> getComments(Date d) {
+		String date = Util.DAY_FORMAT.format(d);
+		return description.get(date);
 	}
 
 	private void add(String date, long timeWorkedInMinutes) {

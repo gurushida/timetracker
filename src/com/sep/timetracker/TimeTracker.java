@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class TimeTracker {
 		this.sickChildDays = sickChildDays;
 	}
 
-	public void printReport(Report report, Date dateEnd) throws ParseException {
+	public void printReport(Report report, Date dateEnd, boolean printComments) throws ParseException {
 		Date dateStart = config.getTrackingStart();
 		if (dateStart.after(dateEnd)) {
 			System.err.println("Cannot print report: end date " + Util.DAY_FORMAT.format(dateEnd) + " is before start date " + Util.DAY_FORMAT.format(dateStart));
@@ -78,7 +79,7 @@ public class TimeTracker {
 			DayType dayType = getDayType(current);
 			long minutesWorked = reportedTime.getTimeWorkedInMinutes(current);
 			if (currentDate.compareTo(reportStart) >= 0) {
-				printReportLine(currentDate, dayType, minutesWorked);				
+				printReportLine(currentDate, dayType, minutesWorked, printComments);
 			}
 			
 			totalAmountDue += dayType.minutesToWork;
@@ -100,7 +101,7 @@ public class TimeTracker {
 		System.out.println();
 	}
 
-	private void printReportLine(Date currentDate, DayType dayType, long minutesWorked) {
+	private void printReportLine(Date currentDate, DayType dayType, long minutesWorked, boolean printComments) {
 		String dayName = Util.getDay(currentDate);
 		StringBuilder b = new StringBuilder();
 		b.append(dayName);
@@ -116,14 +117,22 @@ public class TimeTracker {
 		}
 		b.append(Util.DAY_FORMAT.format(currentDate));
 		b.append(": ");
+		List<String> comments = new ArrayList<>();
 		switch(dayType) {
-		case SICKNESS:       b.append("sick       "); break;
-		case CHILD_SICKNESS: b.append("sick child "); break;
-		case VACATION:       b.append("vacation   "); break;
+		case SICKNESS:       b.append("sick        "); break;
+		case CHILD_SICKNESS: b.append("sick child  "); break;
+		case VACATION:       b.append("vacation    "); break;
 		case HALF_WORKING_DAY:
-		case HOLIDAY:        b.append("holiday    "); break;
+		case HOLIDAY:{
+			b.append(dayType == DayType.HOLIDAY ? "holiday     " : "1/2 holiday ");
+			String c = holidays.getHolidayDescription(currentDate);
+			if (c != null) {
+				comments.add(c);
+			}
+			break;
+		}
 		case WORKING_DAY:
-		case WEEK_END:       b.append("           "); break;
+		case WEEK_END:       b.append("            "); break;
 		default: throw new IllegalStateException();
 		}
 		
@@ -143,12 +152,20 @@ public class TimeTracker {
 			}
 			for (int i = 0 ; i < delta ; i++) {
 				b.append("+");
-			} 
-			
+			}
+		}
+		List<String> list = reportedTime.getComments(currentDate);
+		if (list != null) {
+			comments.addAll(list);
 		}
 		
 		System.out.println(b.toString());
-		
+		if (printComments) {
+			for (String comment : comments) {
+				System.out.println("                      > " + comment);
+			}
+		}
+
 		if ("Sunday".equals(dayName)) {
 			System.out.println();
 		}

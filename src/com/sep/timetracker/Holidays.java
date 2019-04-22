@@ -20,6 +20,7 @@ public class Holidays extends TimeInfoManager {
 	public static final String FILENAME = "holidays";
 
 	private final Map<String, Boolean> map = new HashMap<>();
+	private final Map<String, String> description = new HashMap<>();
 	
 	public Holidays(File f) throws ParseException, FileNotFoundException {
 		super(f);
@@ -37,12 +38,15 @@ public class Holidays extends TimeInfoManager {
 	}
 
 	@Override
-	protected void processLine(String line) throws ParseException {
+	protected void processLine(String line, String comment) throws ParseException {
 		boolean halfDay = line.endsWith("1/2");
 		String dateRaw = line.split(" ")[0];
 		Date d = Util.DAY_FORMAT.parse(dateRaw);
 		String dateNormalized = Util.DAY_FORMAT.format(d);
 		map.put(dateNormalized, halfDay);
+		if (comment != null) {
+			description.put(dateNormalized, comment);
+		}
 	}
 	
 	/**
@@ -51,6 +55,11 @@ public class Holidays extends TimeInfoManager {
 	 */
 	public HolidayType isHoliday(String d) throws ParseException {
 		return isHoliday(Util.DAY_FORMAT.parse(d));
+	}
+
+	public String getHolidayDescription(Date d) {
+		String date = Util.DAY_FORMAT.format(d);
+		return description.get(date);
 	}
 
 	/**

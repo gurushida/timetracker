@@ -31,7 +31,7 @@ public class SickChildDays extends TimeInfoManager {
 	}
 
 	@Override
-	protected void processLine(String line) throws ParseException {
+	protected void processLine(String line, String comment) throws ParseException {
 		Date d = Util.DAY_FORMAT.parse(line);
 		if (Util.isWeekEndDay(d)) {
 			throw new IllegalStateException("Sick child data file contains date " + line + " that is during a weekend");

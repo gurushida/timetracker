@@ -26,7 +26,7 @@ public class Config extends TimeInfoManager {
 	}
 
 	@Override
-	protected void processLine(String line) throws ParseException {
+	protected void processLine(String line, String comment) throws ParseException {
 		if (line.startsWith("start=")) {
 			line = line.substring("start=".length());
 			start = Util.DAY_FORMAT.parse(line);

@@ -96,8 +96,9 @@ will abort if the day is already registered as a sick day, a sick child day, a w
 full public holiday.
 
 .TP
-\fBreport\fR [<type>] [<end>]
+\fBreport\fR [-v|--verbose] [<type>] [<end>]
 Prints a summary of the time tracked up until now or <end> if specified in dd/mm/yyyy format.
+If -v is specified, the comments for a day, if any, are printed after the report for this day.
 <type> can have one of the following values:
 
 .ti 1.6i

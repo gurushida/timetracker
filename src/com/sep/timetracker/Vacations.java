@@ -32,7 +32,7 @@ public class Vacations extends TimeInfoManager {
 	}
 
 	@Override
-	protected void processLine(String line) throws ParseException {
+	protected void processLine(String line, String comment) throws ParseException {
 		if (line.contains(" ")) {
 			throw new IllegalStateException("Vacations data contains invalid entry: " + line);
 		}

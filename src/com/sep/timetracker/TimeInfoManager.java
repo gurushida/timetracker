@@ -35,22 +35,24 @@ public abstract class TimeInfoManager {
 	protected void loadData() throws ParseException {
 		while (iterator.hasNext()) {
 			String line = iterator.next().trim();
+			String comment = null;
 			int pos = line.indexOf('#');
 			if (pos != -1) {
+				comment = line.substring(pos + 1).trim();
 				line = line.substring(0, pos).trim();
 			}
 
 			if (line.isEmpty()) {
 				continue;
 			}
-			processLine(line);
+			processLine(line, comment);
 		}
 		if (iterator instanceof Scanner) {
 			((Scanner) iterator).close();
 		}
 	}
 
-	protected abstract void processLine(String line) throws ParseException;
+	protected abstract void processLine(String line, String comment) throws ParseException;
 
 	protected void addLine(String line) throws IOException {
 		if (dataSource == null)
