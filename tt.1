@@ -118,6 +118,25 @@ Legend:
 .ti 1.6i
 +++\0\0\0\0\0Overtime hours (any time worked past the expected duration for the day)
 
+
+.TP
+\fBremove\fR [--force] <type> <day>
+Removes the data registered for the given <day> in dd/mm/yyyy format.
+The program will ask for confirmation unless --force is used.
+<type> can have the following values:
+
+
+.ti 1.6i
+holiday\0\0\0Removes the day, whether it is a full or a half holiday
+.ti 1.6i
+vacation\0\0Removes the given vacation day
+.ti 1.6i
+sick\0\0\0\0\0\0Removes the given sick day
+.ti 1.6i
+child\0\0\0\0\0Removes the given sick child day
+.ti 1.6i
+worked\0\0\0\0Removes all the worked time reported for the given day
+
 .TP
 \fBgit\fR [<args>]
 This is a shortcut for executing the given git command from the bookkeeping

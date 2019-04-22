@@ -573,6 +573,17 @@ public class Main {
 		System.out.println("                     ###    Hours due and worked");
 		System.out.println("                     +++    Overtime hours (any time worked past the expected duration for the day)");
 		System.out.println();
+		System.out.println("  remove [--force] <type> <day>");
+		System.out.println("                   Removes the data registered for the given <day> in dd/mm/yyyy format.");
+		System.out.println("                   The program will ask for confirmation unless --force is used.");
+		System.out.println("                   <type> can have the following values:");
+		System.out.println();
+		System.out.println("                     holiday   Removes the day, whether it is a full or a half holiday");
+		System.out.println("                     vacation  Removes the given vacation day");
+		System.out.println("                     sick      Removes the given sick day");
+		System.out.println("                     child     Removes the given sick child day");
+		System.out.println("                     worked    Removes all the worked time reported for the given day");
+		System.out.println();
 		System.out.println("  init <start> [--vacations=<N>]");
 		System.out.println("                   Initializes time tracking. <start> is the date to start time tracking from");
 		System.out.println("                   in dd/mm/yyyy format. If --vacations is specified, <N> is an integer indicating the");
