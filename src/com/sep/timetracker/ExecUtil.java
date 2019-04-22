@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ProcessBuilder.Redirect;
 
 public class ExecUtil {
 
@@ -17,6 +18,23 @@ public class ExecUtil {
 			this.exitCode = exitCode;
 			this.stdout = stdout;
 			this.stderr = stderr;
+		}
+	}
+
+	/**
+	 * Executes the given command in the given directory
+	 * using the same stdin, stdout and stderr as the parent process.
+	 */
+	public static void execInheritParentIO(File workingDirectory, String... args) {
+		ProcessBuilder pb = new ProcessBuilder(args);
+		pb.directory(workingDirectory);
+		pb.redirectInput(Redirect.INHERIT);
+		pb.redirectOutput(Redirect.INHERIT);
+		pb.redirectError(Redirect.INHERIT);
+		try {
+			pb.start().waitFor();
+		} catch (InterruptedException | IOException e) {
+			e.printStackTrace();
 		}
 	}
 

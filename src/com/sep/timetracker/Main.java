@@ -12,7 +12,7 @@ public class Main {
 
 	public static File dir = new File(System.getProperty("user.home"), ".timetracker");
 
-	public static void main(String[] args) throws ParseException, IOException {
+	public static void main(String[] args) throws ParseException, IOException, InterruptedException {
 		if (!GitUtil.isGitPresent()) {
 			System.err.println("git not found ! This time tracker application needs git to work as intended.");
 			System.err.println();
@@ -57,6 +57,7 @@ public class Main {
 		case "start": startTimeTracking(); return;
 		case "stop": stopTimeTracking(timeTracker, args); return;
 		case "add": reportTime(timeTracker, args); return;
+		case "git": ExecUtil.execInheritParentIO(dir, args); return;
 		default: {
 			System.err.println("Unknown command: '" + args[0] + "'");
 			System.exit(1);
@@ -499,6 +500,9 @@ public class Main {
 		System.out.println("                   number of vacation days allowed per year. The default is 25 days. This value");
 		System.out.println("                   is only used a safety net to prevent you from accidentally registering too many");
 		System.out.println("                   vacation days on a given year.");
+		System.out.println();
+		System.out.println("  git [<args>]     This is a shortcut for executing the given git command from the bookkeeping");
+		System.out.println("                   directory.");
 		System.out.println();
 	}
 }

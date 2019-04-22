@@ -25,7 +25,7 @@ vacation, etc.
 
 Even though this git repository is created as a local one, you are free to
 push it to a remote location, for instance if you want to do your time tracking across several
-machines. In this case, it is up to you to use \fBgit pull\fR and \fBgit push\fR to keep things in sync
+machines. In this case, it is up to you to use \fBtt git pull\fR and \fBtt git push\fR to keep things in sync
 with your remote repository.
 
 .SH COMMANDS
@@ -35,7 +35,7 @@ Prints some basic help.
 
 .TP
 \fBinit\fR <start> [--vacations=<N>]
-Before you can do any time tracking, you need to initialize the time tracker with the init command.
+Before you can do any time tracking, you need to initialize the time tracker with this command.
 <start> is the date to start time tracking from in dd/mm/yyyy format. This date will be the
 reference point when it comes to calculating the balance between the time you should have worked
 and the worked time that you have reported. If --vacations is specified, <N> is an integer
@@ -116,4 +116,10 @@ Legend:
 ###\0\0\0\0\0Hours due and worked
 .ti 1.6i
 +++\0\0\0\0\0Overtime hours (any time worked past the expected duration for the day)
+
+.TP
+\fBgit\fR [<args>]
+This is a shortcut for executing the given git command from the bookkeeping
+directory. For instance, \fBtt git log\fR will list the modifications done since you
+invoked the \fBinit\fR command.
 
