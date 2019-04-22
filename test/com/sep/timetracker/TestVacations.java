@@ -21,6 +21,18 @@ public class TestVacations {
 	}
 
 	@Test
+	public void testRemoveVacations() throws ParseException {
+		Vacations v = new Vacations("18/03/2010", "removed 18/03/2010");
+		assertFalse(v.isVacationDay("18/03/2010"));
+	}
+
+	@Test
+	public void testRemoveAndReAddVacations() throws ParseException {
+		Vacations v = new Vacations("18/03/2010", "removed 18/03/2010", "18/03/2010");
+		assertTrue(v.isVacationDay("18/03/2010"));
+	}
+
+	@Test
 	public void testBadVacations1() throws ParseException {
 		try {
 			new Vacations("foobar");

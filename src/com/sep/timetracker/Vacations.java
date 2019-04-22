@@ -13,6 +13,7 @@ import java.util.Set;
 public class Vacations extends TimeInfoManager {
 
 	public static final String FILENAME = "vacations";
+	private final static String REMOVED_PREFIX = "removed ";
 
 	private final Set<String> vacationDays = new HashSet<>();
 	
@@ -33,15 +34,25 @@ public class Vacations extends TimeInfoManager {
 
 	@Override
 	protected void processLine(String line, String comment) throws ParseException {
+		boolean removed = line.startsWith(REMOVED_PREFIX);
+		if (removed) {
+			line = line.substring(REMOVED_PREFIX.length());
+		}
+
 		if (line.contains(" ")) {
 			throw new IllegalStateException("Vacations data contains invalid entry: " + line);
 		}
+
 		Date d = Util.DAY_FORMAT.parse(line);
 		if (Util.isWeekEndDay(d)) {
 			throw new IllegalStateException("Vacations data contains vacation date " + line + " that is during a weekend");
 		}
 		String dateNormalized = Util.DAY_FORMAT.format(d);
-		vacationDays.add(dateNormalized);
+		if (removed) {
+			vacationDays.remove(dateNormalized);
+		} else {
+			vacationDays.add(dateNormalized);
+		}
 	}
 	
 	/**
@@ -76,6 +87,10 @@ public class Vacations extends TimeInfoManager {
 
 	public void addVacationDay(Date d) throws IOException {
 		addLine(Util.DAY_FORMAT.format(d));
+	}
+
+	public void removeVacationDay(Date d) throws IOException {
+		addLine(REMOVED_PREFIX + Util.DAY_FORMAT.format(d));
 	}
 
 	public static void initialize(File f) throws IOException, ParseException {

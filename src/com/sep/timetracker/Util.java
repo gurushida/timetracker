@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -98,5 +99,15 @@ public class Util {
 		}
 		int minutes = 60 * Integer.valueOf(m.group(1)) + Integer.valueOf(m.group(2));
 		return minutes;
+	}
+
+	public static void askForConfirmation(String question) {
+		System.out.print(question + " (y to confirm) ");
+		try (Scanner sc = new Scanner(System.in)) {
+			String answer = sc.next();
+			if (!"y".equals(answer)) {
+				System.exit(0);
+			}
+		}
 	}
 }

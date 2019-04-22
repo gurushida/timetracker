@@ -36,6 +36,11 @@ public class Main {
 			return;
 		}
 
+		if ("git".equals(args[0])) {
+			ExecUtil.execInheritParentIO(dir, args);
+			return;
+		}
+
 		TimeTracker timeTracker;
 		try {
 			timeTracker = new TimeTracker(dir);
@@ -57,7 +62,7 @@ public class Main {
 		case "start": startTimeTracking(); return;
 		case "stop": stopTimeTracking(timeTracker, args); return;
 		case "add": reportTime(timeTracker, args); return;
-		case "git": ExecUtil.execInheritParentIO(dir, args); return;
+		case "remove": removeDay(timeTracker, args); return;
 		default: {
 			System.err.println("Unknown command: '" + args[0] + "'");
 			System.exit(1);
@@ -251,6 +256,59 @@ public class Main {
 			System.exit(1);
 		}
 		String msg = "Vacation day added for " + args[1];
+		System.out.println(msg);
+		System.out.println();
+		GitUtil.addAllAndCommit(dir, msg);
+	}
+
+	private static void removeDay(TimeTracker timeTracker, String[] args) throws ParseException, IOException {
+		GitUtil.checkUncommittedChanges(dir);
+		boolean force = false;
+		int pos = 1;
+		if (pos < args.length && "--force".equals(args[pos])) {
+			force = true;
+			pos++;
+		}
+
+		if (pos == args.length) {
+			System.err.println("Missing <type> argument");
+			System.err.println();
+			System.exit(1);
+		}
+		String type = args[pos];
+		pos++;
+		switch(type) {
+		case "vacation": break;
+		default: {
+			System.err.println("Unsupported <type> value: " + type);
+			System.err.println();
+			System.exit(1);
+		}
+		}
+
+		if (pos == args.length) {
+			System.err.println("Missing <day> argument");
+			System.err.println();
+			System.exit(1);
+		}
+		Date d;
+		try {
+			d = Util.DAY_FORMAT.parse(args[pos]);
+		} catch (ParseException e) {
+			System.err.println(args[pos] + " is not a valid dd/mm/yyyy date");
+			System.err.println();
+			System.exit(1);
+			// See comment in reportTime()
+			return;
+		}
+
+		String err = timeTracker.removeVacationDay(d, force);
+		if (err != null) {
+			System.err.println(err);
+			System.err.println();
+			System.exit(1);
+		}
+		String msg = "Removed " + type + " day " + args[pos];
 		System.out.println(msg);
 		System.out.println();
 		GitUtil.addAllAndCommit(dir, msg);

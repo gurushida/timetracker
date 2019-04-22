@@ -317,4 +317,19 @@ public class TimeTracker {
 	public void reportWorkedTime(Date start, Date end, String description) throws IOException {
 		reportedTime.reportWorkedTimeInterval(start, end, description);
 	}
+
+	/**
+	 * Removes the given vacation day. Asks for confirmation unless force is true.
+	 * Returns null if the removal is done; otherwise returns an error message.
+	 */
+	public String removeVacationDay(Date d, boolean force) throws IOException {
+		if (!vacations.isVacationDay(d)) {
+			return "Cannot remove " + Util.DAY_FORMAT.format(d) + " as it is not registered as a vacation day !";
+		}
+		if (!force) {
+			Util.askForConfirmation("Are you sure you want to remove the vacation day " + Util.DAY_FORMAT.format(d) + " ?");
+		}
+		vacations.removeVacationDay(d);
+		return null;
+	}
 }
