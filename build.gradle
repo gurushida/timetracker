@@ -21,6 +21,7 @@ sourceSets {
 }
 
 jar {
+	dependsOn test
 	destinationDir file("$project.projectDir/")
 	archiveName "timetracker.jar"
 
@@ -42,7 +43,7 @@ task installManPage(type: Copy) {
 }
 
 task install {
-	dependsOn test, installJar, installManPage
+	dependsOn installJar, installManPage
 	doLast {
 		if (Os.isFamily(Os.FAMILY_WINDOWS)) {
 			println "This task cannot be executed on Windows."
