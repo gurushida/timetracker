@@ -12,6 +12,7 @@ import java.util.Set;
 public class SickChildDays extends TimeInfoManager {
 
 	public static final String FILENAME = "sick_child_days";
+	private final static String REMOVED_PREFIX = "removed ";
 
 	private final Set<String> sickChildDays = new HashSet<>();
 	
@@ -32,12 +33,21 @@ public class SickChildDays extends TimeInfoManager {
 
 	@Override
 	protected void processLine(String line, String comment) throws ParseException {
+		boolean removed = line.startsWith(REMOVED_PREFIX);
+		if (removed) {
+			line = line.substring(REMOVED_PREFIX.length());
+		}
+
 		Date d = Util.DAY_FORMAT.parse(line);
 		if (Util.isWeekEndDay(d)) {
 			throw new IllegalStateException("Sick child data file contains date " + line + " that is during a weekend");
 		}
 		String dateNormalized = Util.DAY_FORMAT.format(d);
-		sickChildDays.add(dateNormalized);
+		if (removed) {
+			sickChildDays.remove(dateNormalized);
+		} else {
+			sickChildDays.add(dateNormalized);
+		}
 	}
 	
 	/**
@@ -69,6 +79,10 @@ public class SickChildDays extends TimeInfoManager {
 
 	public void addSickChildDay(Date d) throws IOException {
 		addLine(Util.DAY_FORMAT.format(d));
+	}
+
+	public void removeSickChildDay(Date d) throws IOException {
+		addLine(REMOVED_PREFIX + Util.DAY_FORMAT.format(d));
 	}
 
 }

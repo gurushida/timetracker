@@ -280,6 +280,7 @@ public class Main {
 		switch(type) {
 		case "vacation": break;
 		case "holiday": break;
+		case "child": break;
 		default: {
 			System.err.println("Unsupported <type> value: " + type);
 			System.err.println();
@@ -304,9 +305,11 @@ public class Main {
 		}
 
 		String err;
+		String displayableType = type;
 		switch(type) {
 		case "vacation": err = timeTracker.removeVacationDay(d, force); break;
 		case "holiday": err = timeTracker.removeHoliday(d, force); break;
+		case "child": displayableType = "sick child"; err = timeTracker.removeSickChildDay(d, force); break;
 		default: throw new IllegalStateException();
 		}
 		if (err != null) {
@@ -314,7 +317,7 @@ public class Main {
 			System.err.println();
 			System.exit(1);
 		}
-		String msg = "Removed " + type + " day " + args[pos];
+		String msg = "Removed " + displayableType + " day " + args[pos];
 		System.out.println(msg);
 		System.out.println();
 		GitUtil.addAllAndCommit(dir, msg);
