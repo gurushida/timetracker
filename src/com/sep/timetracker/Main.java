@@ -526,7 +526,6 @@ public class Main {
 				System.exit(1);
 				return;
 			}
-			System.out.println(m.groupCount());
 			vacationDaysPerYear = Integer.valueOf(m.group(1));
 			argPos++;
 		}
