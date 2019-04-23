@@ -1,0 +1,5 @@
+#!/bin/sh
+man -t ./tt.1 > tt.ps
+pstopdf tt.ps
+rm tt.ps
+git add tt.pdf
