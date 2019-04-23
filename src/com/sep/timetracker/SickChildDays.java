@@ -39,9 +39,6 @@ public class SickChildDays extends TimeInfoManager {
 		}
 
 		Date d = Util.DAY_FORMAT.parse(line);
-		if (Util.isWeekEndDay(d)) {
-			throw new IllegalStateException("Sick child data file contains date " + line + " that is during a weekend");
-		}
 		String dateNormalized = Util.DAY_FORMAT.format(d);
 		if (removed) {
 			sickChildDays.remove(dateNormalized);

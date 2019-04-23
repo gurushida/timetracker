@@ -44,9 +44,6 @@ public class Vacations extends TimeInfoManager {
 		}
 
 		Date d = Util.DAY_FORMAT.parse(line);
-		if (Util.isWeekEndDay(d)) {
-			throw new IllegalStateException("Vacations data contains vacation date " + line + " that is during a weekend");
-		}
 		String dateNormalized = Util.DAY_FORMAT.format(d);
 		if (removed) {
 			vacationDays.remove(dateNormalized);

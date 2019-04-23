@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public class WeekPattern {
 
-	public static String DEFAULT = "Mon=7:30, Tue=7:30, Wed=7:30, Thu=7:30, Fri=7:30";
+	public static String DEFAULT = "Mon=7:30,Tue=7:30,Wed=7:30,Thu=7:30,Fri=7:30";
 	private final static Pattern PATTERN = Pattern.compile("^(Mon|Tue|Wed|Thu|Fri|Sat|Sun)=([01]?[0-9]|2[0-3]):([0-5][0-9])$");
 
 	private Map<String, Integer> minutesToWorkPerDay = new HashMap<>();

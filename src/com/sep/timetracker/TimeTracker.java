@@ -78,14 +78,15 @@ public class TimeTracker {
 		while (currentDate.compareTo(dateEnd) <= 0) {
 			DayType dayType = getDayType(current);
 			long minutesWorked = reportedTime.getTimeWorkedInMinutes(current);
+			int minutesToWork = (int) (dayType.workRatio * config.getWeekPattern().getTimeToWork(currentDate));
 			if (currentDate.compareTo(reportStart) >= 0) {
-				printReportLine(currentDate, dayType, minutesWorked, printComments);
+				printReportLine(currentDate, dayType, minutesToWork, minutesWorked, printComments);
 			}
 			
-			totalAmountDue += dayType.minutesToWork;
+			totalAmountDue += minutesToWork;
 			totalAmountWorked += minutesWorked;
 			if (currentDate.compareTo(startOfWeek) >= 0) {
-				totalAmountDueThisWeek += dayType.minutesToWork;
+				totalAmountDueThisWeek += minutesToWork;
 				totalAmountWorkedThisWeek += minutesWorked;
 			}
 
@@ -101,7 +102,7 @@ public class TimeTracker {
 		System.out.println();
 	}
 
-	private void printReportLine(Date currentDate, DayType dayType, long minutesWorked, boolean printComments) {
+	private void printReportLine(Date currentDate, DayType dayType, int minutesToWork, long minutesWorked, boolean printComments) {
 		String dayName = Util.getDay(currentDate);
 		StringBuilder b = new StringBuilder();
 		b.append(dayName);
@@ -136,7 +137,7 @@ public class TimeTracker {
 		default: throw new IllegalStateException();
 		}
 		
-		long hourQuartersDue = dayType.minutesToWork / 15;
+		long hourQuartersDue = minutesToWork / 15;
 		long hourQuartersWorked = minutesWorked / 15;
 		long delta = hourQuartersWorked - hourQuartersDue;
 		if (delta <= 0) {
@@ -182,7 +183,7 @@ public class TimeTracker {
 	 * Given a date, return the type of day it is.
 	 */
 	public DayType getDayType(Date d) {
-		if (Util.isWeekEndDay(d)) {
+		if (config.getWeekPattern().isWeekendDay(d)) {
 			return DayType.WEEK_END;
 		}
 		
@@ -214,7 +215,7 @@ public class TimeTracker {
 	 * vacation day would overflow the annual days/year limit.
 	 */
 	public String addVacationDay(Date d) throws ParseException, IOException {
-		if (Util.isWeekEndDay(d))  {
+		if (config.getWeekPattern().isWeekendDay(d))  {
 			return "Cannot add vacation day on " + Util.DAY_FORMAT.format(d) + " as it is a " + Util.getDay(d);
 		}
 		if (vacations.isVacationDay(d)) {
@@ -254,7 +255,7 @@ public class TimeTracker {
 	 * is a full holiday day, is already a sick day or a child sick day.
 	 */
 	public String addSickDay(Date d) throws ParseException, IOException {
-		if (Util.isWeekEndDay(d))  {
+		if (config.getWeekPattern().isWeekendDay(d))  {
 			return "Cannot add sick day on " + Util.DAY_FORMAT.format(d) + " as it is a " + Util.getDay(d);
 		}
 
@@ -280,7 +281,7 @@ public class TimeTracker {
 	 * is a full holiday day, is already a sick day or a child sick day.
 	 */
 	public String addSickChildDay(Date d) throws ParseException, IOException {
-		if (Util.isWeekEndDay(d))  {
+		if (config.getWeekPattern().isWeekendDay(d))  {
 			return "Cannot add sick child day on " + Util.DAY_FORMAT.format(d) + " as it is a " + Util.getDay(d);
 		}
 

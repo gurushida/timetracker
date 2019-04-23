@@ -7,9 +7,9 @@
 <command> [<args>]
 .SH DESCRIPTION
 This utility allows you to do simple time tracking so that you can know at any time
-what is your (worked time / expected work time) ratio. It works on the assumptions that you
+what is your (worked time / expected work time) ratio. By default, it assumes that you
 work from Monday to Friday, 7.5 hours a day, and that you have 25 days of vacation
-per year (see \fBinit\fR for changing default values). It supports adding public holidays (with the possibility to declare half-days),
+per year (see \fBinit\fR for changing the default values). It supports adding public holidays (with the possibility to declare half-days),
 declaring vacation days, days you stay home because you are sick and days you stay home
 because you take care of a sick child. In case you wonder how all these days off are even
 possible, this utility has been designed in a scandinavian country ;-)
@@ -34,14 +34,29 @@ with your remote repository.
 Prints some basic help.
 
 .TP
-\fBinit\fR <start> [--vacations=<N>]
+\fBinit\fR <start> [--vacations=<N>] [--weekpattern=<pattern>]
 Before you can do any time tracking, you need to initialize the time tracker with this command.
+
+
 <start> is the date to start time tracking from in dd/mm/yyyy format. This date will be the
 reference point when it comes to calculating the balance between the time you should have worked
-and the worked time that you have reported. If --vacations is specified, <N> is an integer
-indicating the number of vacation days allowed per year. The default is 25 days. This value
-is only used a safety net to prevent you from accidentally registering too many
-vacation days on a given year.
+and the worked time that you have reported.
+
+
+If --vacations is specified, <N> is an integer indicating the number of vacation days allowed
+per year. The default is 25 days. This value is only used a safety net to prevent you from
+accidentally registering too many vacation days on a given year.
+
+
+If --weekpattern is specified, <pattern> represents your regular work pattern. It must be a
+comma-separated list (possibly empty) where each part is of the form DAY=hours:minutes
+where DAY must have one of the following values: Mon, Tue, Wed, Thu, Fri, Sat, Sun.
+The parts can be in any order and any day not described in the pattern is
+considered a weekend day, i.e. a day you are not supposed to work. For instance,
+the default pattern of 7.5 hours a day from Monday to Friday is the following:
+
+.ti 1.6i
+Mon=7:30,Tue=7:30,Wed=7:30,Thu=7:30,Fri=7:30
 
 
 This command creates a bookkeeping directory named .timetracker located in your home directory.

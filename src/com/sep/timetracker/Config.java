@@ -13,6 +13,7 @@ public class Config extends TimeInfoManager {
 
 	private Date start;
 	private Integer vacationDaysPerYear;
+	private WeekPattern weekPattern;
 
 	public Config(File f) throws ParseException, FileNotFoundException {
 		super(f);
@@ -23,6 +24,7 @@ public class Config extends TimeInfoManager {
 		super(Collections.emptyList());
 		this.start = new Date();
 		this.vacationDaysPerYear = 25;
+		this.weekPattern = new WeekPattern();
 	}
 
 	@Override
@@ -39,6 +41,15 @@ public class Config extends TimeInfoManager {
 					System.err.println();
 					System.exit(1);
 				}
+		} else if (line.startsWith("week_pattern=")) {
+			line = line.substring("week_pattern=".length());
+			try {
+				weekPattern = new WeekPattern(line);
+			} catch (Exception e) {
+				System.err.println("Invalid line in " + dataSource.getAbsolutePath() + ": week_pattern=" + line);
+				System.err.println();
+				System.exit(1);
+			}
 		} else {
 			System.err.println("Invalid line in " + dataSource.getAbsolutePath() + ": " + line);
 			System.err.println();
@@ -54,12 +65,17 @@ public class Config extends TimeInfoManager {
 		return vacationDaysPerYear;
 	}
 
-	public static void initialize(File f, Date d, int vacationDaysPerYear) throws IOException, ParseException {
+	public WeekPattern getWeekPattern() {
+		return weekPattern;
+	}
+
+	public static void initialize(File f, Date d, int vacationDaysPerYear, String weekPattern) throws IOException, ParseException {
 		f.createNewFile();
 		Config t = new Config(f);
 		t.addLine("# Day the time tracking started from in dd/mm/yyyy format");
 		t.addLine("start=" + Util.DAY_FORMAT.format(d));
 		t.addLine("# Vacation days per year");
 		t.addLine("vacation_days_per_year=" + vacationDaysPerYear);
+		t.addLine("week_pattern=" + (weekPattern == null ? "" : weekPattern));
 	}
 }

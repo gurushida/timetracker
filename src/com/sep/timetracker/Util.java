@@ -14,8 +14,6 @@ import java.util.regex.Pattern;
 
 public class Util {
 
-	public final static int WORKING_DAY = 7 * 60 + 30; // minutes
-
 	public final static DateFormat DAY_OF_WEEK_FORMAT = new SimpleDateFormat("EEEE", Locale.ENGLISH);
 	public final static DateFormat DAY_FORMAT = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
 	public final static DateFormat TIME_FORMAT = new SimpleDateFormat("dd/MM/yyyy HH:mm Z", Locale.ENGLISH);
@@ -46,12 +44,6 @@ public class Util {
 		return Date.from(d.toInstant().plus(minutes, ChronoUnit.MINUTES));
 	}
 
-	public static boolean isWeekEndDay(Date d) {
-		calendar.setTime(d);
-		int day = calendar.get(Calendar.DAY_OF_WEEK);
-		return day == Calendar.SATURDAY || day == Calendar.SUNDAY;
-	}
-	
 	public static int getYear(Date d) {
 		calendar.setTime(d);
 		return calendar.get(Calendar.YEAR);

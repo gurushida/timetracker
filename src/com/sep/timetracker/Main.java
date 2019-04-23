@@ -491,33 +491,43 @@ public class Main {
 			System.exit(1);
 		}
 
+		int argPos = 1;
 		Date d;
 		try {
-			d = Util.DAY_FORMAT.parse(args[1]);
+			d = Util.DAY_FORMAT.parse(args[argPos]);
 		} catch (ParseException e) {
-			System.err.println(args[1] + " is not a valid dd/mm/yyyy date");
+			System.err.println(args[argPos] + " is not a valid dd/mm/yyyy date");
 			System.err.println();
 			System.exit(1);
 			// See comment in reportTime()
 			return;
 		}
+		argPos++;
 
 		int vacationDaysPerYear = 25;
-		if (args.length > 2) {
+		if (argPos < args.length && args[argPos].startsWith("--vacations=")) {
 			Pattern p = Pattern.compile("^--vacations=([0-9]+)$");
-			Matcher m = p.matcher(args[2]);
-			if (!args[2].startsWith("--vacations=") || !m.matches()) {
-				System.err.println("Invalid argument: " + args[2]);
+			Matcher m = p.matcher(args[argPos]);
+			if (!m.matches()) {
+				System.err.println("Invalid argument: " + args[argPos]);
 				System.err.println();
 				System.exit(1);
 				return;
 			}
 			System.out.println(m.groupCount());
 			vacationDaysPerYear = Integer.valueOf(m.group(1));
+			argPos++;
+		}
+
+		String weekPattern = WeekPattern.DEFAULT;
+		if (argPos < args.length && args[argPos].startsWith("--weekpattern=")) {
+			weekPattern = args[argPos].substring("--weekpattern=".length());
+			new WeekPattern(weekPattern); // Will abort the program if the pattern is invalid
+			argPos++;
 		}
 
 		dir.mkdir();
-		Config.initialize(new File(dir, Config.FILENAME), d, vacationDaysPerYear);
+		Config.initialize(new File(dir, Config.FILENAME), d, vacationDaysPerYear, weekPattern);
 		Holidays.initialize(new File(dir, Holidays.FILENAME));
 		Vacations.initialize(new File(dir, Vacations.FILENAME));
 		SickDays.initialize(new File(dir, SickDays.FILENAME));
@@ -584,12 +594,21 @@ public class Main {
 		System.out.println("                     child     Removes the given sick child day");
 		System.out.println("                     worked    Removes all the worked time reported for the given day");
 		System.out.println();
-		System.out.println("  init <start> [--vacations=<N>]");
+		System.out.println("  init <start> [--vacations=<N>] [--weekpattern=<pattern>]");
 		System.out.println("                   Initializes time tracking. <start> is the date to start time tracking from");
 		System.out.println("                   in dd/mm/yyyy format. If --vacations is specified, <N> is an integer indicating the");
 		System.out.println("                   number of vacation days allowed per year. The default is 25 days. This value");
 		System.out.println("                   is only used a safety net to prevent you from accidentally registering too many");
 		System.out.println("                   vacation days on a given year.");
+		System.out.println();
+		System.out.println("                   <pattern> represents your regular work pattern. It must be a comma-separated list");
+		System.out.println("                   (possibly empty) where each part is of the form DAY=hours:minutes where DAY");
+		System.out.println("                   must have one of the following values: Mon, Tue, Wed, Thu, Fri, Sat, Sun.");
+		System.out.println("                   The parts can be in any order and any day not described in the pattern is");
+		System.out.println("                   considered a weekend day, i.e. a day you are not supposed to work. For instance,");
+		System.out.println("                   the default pattern of 7.5 hours a day from Monday to Friday is the following:");
+		System.out.println();
+		System.out.println("                     Mon=7:30,Tue=7:30,Wed=7:30,Thu=7:30,Fri=7:30");
 		System.out.println();
 		System.out.println("  git [<args>]     This is a shortcut for executing the given git command from the bookkeeping");
 		System.out.println("                   directory.");

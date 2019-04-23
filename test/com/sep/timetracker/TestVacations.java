@@ -45,16 +45,6 @@ public class TestVacations {
 	@Test
 	public void testBadVacations2() throws ParseException {
 		try {
-			new Vacations("14/04/2019"); // This is a Sunday, which should not be allowed as a valid vacation date
-		} catch (Throwable e) {
-			return;
-		}
-		fail();
-	}
-
-	@Test
-	public void testBadVacations3() throws ParseException {
-		try {
 			new Vacations("11/02/2010 abc");
 		} catch (Throwable e) {
 			return;
