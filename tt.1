@@ -9,7 +9,8 @@
 This utility allows you to do simple time tracking so that you can know at any time
 what is your (worked time / expected work time) ratio. By default, it assumes that you
 work from Monday to Friday, 7.5 hours a day, and that you have 25 days of vacation
-per year (see \fBinit\fR for changing the default values). It supports adding public holidays (with the possibility to declare half-days),
+per year (see \fBinit\fR for changing the default values). It supports adding public
+holidays (with the possibility to declare half-days),
 declaring vacation days, days you stay home because you are sick and days you stay home
 because you take care of a sick child. In case you wonder how all these days off are even
 possible, this utility has been designed in a scandinavian country ;-)
@@ -17,16 +18,17 @@ possible, this utility has been designed in a scandinavian country ;-)
 You can report worked time by starting and stopping a stopwatch as well as directly declaring time
 for a given day.
 
-Because time reporting is a matter of trust, this utility versions its internal data with \fBgit\fR to
-keep the full history of all the time tracking operations you do once you start tracking. If you do
+Because time reporting is a matter of trust, this utility versions its internal data with
+\fBgit\fR to keep the full history of all the time tracking operations you do once you
+start tracking. If you do
 manual modifications on the bookkeeping files of the utility, you will have to commit those
 changes manually before you can use \fBtt\fR again to report worked time or declare holiday,
 vacation, etc.
 
 Even though this git repository is created as a local one, you are free to
 push it to a remote location, for instance if you want to do your time tracking across several
-machines. In this case, it is up to you to use \fBtt git pull\fR and \fBtt git push\fR to keep things in sync
-with your remote repository.
+machines. In this case, it is up to you to use \fBtt git pull\fR and \fBtt git push\fR to keep
+things in sync with your remote repository.
 
 .SH COMMANDS
 .TP
@@ -114,7 +116,7 @@ full public holiday.
 \fBreport\fR [-v|--verbose] [<type>] [<end>]
 Prints a summary of the time tracked up until now or <end> if specified in dd/mm/yyyy format.
 If -v is specified, the comments for a day, if any, are printed after the report for this day.
-<type> can have one of the following values:
+<type> must have one of the following values:
 
 .ti 1.6i
 week\0\0\0\0Prints the current week (default)
@@ -138,7 +140,7 @@ Legend:
 \fBremove\fR [--force] <type> <day>
 Removes the data registered for the given <day> in dd/mm/yyyy format.
 The program will ask for confirmation unless --force is used.
-<type> can have the following values:
+<type> must have one of the following values:
 
 
 .ti 1.6i
