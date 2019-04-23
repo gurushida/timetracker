@@ -50,7 +50,7 @@ task install {
 		} else {
 			new File("/usr/local/bin/tt").text = """
 #!/bin/sh
-java -jar /usr/local/bin/timetracker.jar \$@
+java -jar /usr/local/bin/timetracker.jar "\$@"
 """
 			exec {
 				executable "sh"

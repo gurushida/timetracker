@@ -113,8 +113,8 @@ public class TimeTracker {
 		double balance = totalAmountWorked - totalAmountDue;
 		double hours = balance / 60.0;
 		System.out.println();
-		System.out.println(String.format("So far this week: %.1fh/%.1fh worked", totalAmountWorkedThisWeek / 60.0, totalAmountDueThisWeek / 60.0));
-		System.out.println(String.format("Total overtime:   %.1f hours (from %s to %s)", hours,
+		System.out.println(String.format("Last week:      %.1fh/%.1fh worked", totalAmountWorkedThisWeek / 60.0, totalAmountDueThisWeek / 60.0));
+		System.out.println(String.format("Total overtime: %.1f hours (from %s to %s)", hours,
 				Util.DAY_FORMAT.format(config.getTrackingStart()), Util.DAY_FORMAT.format(dateEnd)));
 		System.out.println();
 	}
