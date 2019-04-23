@@ -544,6 +544,8 @@ public class Main {
 		System.out.println("  help             Prints this basic help.");
 		if (!System.getProperty("os.name").toLowerCase().contains("windows")) {
 			System.out.println("                   Use 'man tt' for more details.");
+		} else {
+			System.out.println("                   See 'tt.pdf' for more details.");
 		}
 		System.out.println();
 		System.out.println("  start            Starts tracking time from now.");
