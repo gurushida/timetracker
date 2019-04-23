@@ -9,7 +9,7 @@
 This utility allows you to do simple time tracking so that you can know at any time
 what is your (worked time / expected work time) ratio. By default, it assumes that you
 work from Monday to Friday, 7.5 hours a day, and that you have 25 days of vacation
-per year (see \fBinit\fR for changing the default values). It supports adding public
+per year (see \fBinit\fR and \fBplan\fR for changing the default values). It supports adding public
 holidays (with the possibility to declare half-days),
 declaring vacation days, days you stay home because you are sick and days you stay home
 because you take care of a sick child. In case you wonder how all these days off are even
@@ -61,17 +61,20 @@ the default pattern of 7.5 hours a day from Monday to Friday is the following:
 Mon=7:30,Tue=7:30,Wed=7:30,Thu=7:30,Fri=7:30
 
 
-This command creates a bookkeeping directory named .timetracker located in your home directory.
+If your work schedule is not the same every week or if you have to adjust it from
+time to time, use the \fBplan\fR command to override the regular weekly schedule.
+
+The \fBinit\fR command creates a bookkeeping directory named .timetracker located in your home directory.
 This directory is then turned into a git repository by invoking \fBgit init\fR to allow time
 tracking operations to be tracked themselves as git commits to ensure traceability.
 
 .TP
 .B start
-Starts the clockwatch. You need use \fBstop\fR to stop it and report the interval as worked time.
+Starts the stopwatch. You need use \fBstop\fR to stop it and report the interval as worked time.
 
 .TP
 \fBstop\fR [--force] [description]
-Stops the clockwatch and reports the elapsed time as worked time. The optional description
+Stops the stopwatch and reports the elapsed time as worked time. The optional description
 is only meant to be used as a hint for humans. If the elapsed time is larger than 24 hours,
 the program will abort. If the elapsed time is larger than 10 hours or if the clockwatch is not
 stopped on the same day it was started, the program will abort unless you have used --force to
@@ -86,6 +89,19 @@ Registers worked time for a given day. <day> must be given in dd/mm/yyyy format.
 is only meant to be used as a hint for humans. As for the \fBstop\fR command, you cannot
 report a duration larger than 24 hours and you need to use --force if the duration is
 larger than 10 hours.
+
+
+.TP
+\fBplan\fR [--force] <day> <duration> [description]
+Declares the amount of time that should be worked on the given day. This value
+will take precedence over the value given by the week pattern. <day> is given
+in dd/mm/yyyy format. <duration> is the amount of time to work in the hh:mm format.
+The description is optional and is only meant as a hint for humans. As for the \fBstop\fR command, you cannot report a duration larger than 24 hours and you need to use --force
+if the duration is larger than 10 hours.
+
+For example, if you normally work 8 hours from Monday to Friday but you exceptionally need to
+swap a Friday with a Saturday, you can use this command to declare a duration of 0:00
+for the Friday and a duration of 8:00 for the Saturday.
 
 .TP
 \fBholiday\fR [--half] <day> [description]
@@ -153,6 +169,8 @@ sick\0\0\0\0\0\0Removes the given sick day
 child\0\0\0\0\0Removes the given sick child day
 .ti 1.6i
 worked\0\0\0\0Removes all the worked time reported for the given day
+.ti 1.6i
+planned\0\0\0Removes the entry for the given day from the planning file
 
 .TP
 \fBgit\fR [<args>]

@@ -18,6 +18,17 @@ public class TestTimeTracker {
 	}
 
 	@Test
+	public void testWorkPlanning() throws ParseException {
+		TimeTracker t = new TimeTracker(new Config(), new ReportedTime(), new Holidays(), new Vacations("15/04/2019"), new SickDays(), new SickChildDays(),
+				new WorkPlanning("14/04/2019 5:30", "15/04/2019 0:00", "16/04/2019 0:00", "removed 16/04/2019", "17/04/2019 3:20"));
+		assertEquals(DayType.WORKING_DAY, t.getDayType("14/04/2019")); // Sunday
+		assertEquals(DayType.WEEK_END, t.getDayType("15/04/2019"));    // Monday
+		assertEquals(DayType.WORKING_DAY, t.getDayType("16/04/2019")); // Tuesday
+		assertEquals(7 * 60 + 30, t.getTimeToWork(Util.DAY_FORMAT.parse("16/04/2019")));
+		assertEquals(3 * 60 + 20, t.getTimeToWork(Util.DAY_FORMAT.parse("17/04/2019")));
+	}
+
+	@Test
 	public void testCannotAddVacationOnWeekEnd() throws ParseException, IOException {
 		TimeTracker t = new TimeTracker();
 		assertNotNull(t.addVacationDay(Util.DAY_FORMAT.parse("19/03/2011")));
@@ -25,19 +36,22 @@ public class TestTimeTracker {
 
 	@Test
 	public void testCannotAddVacationDayTwice() throws ParseException, IOException {
-		TimeTracker t = new TimeTracker(new Config(), new ReportedTime(), new Holidays(), new Vacations("15/04/2019"), new SickDays(), new SickChildDays());
+		TimeTracker t = new TimeTracker(new Config(), new ReportedTime(), new Holidays(), new Vacations("15/04/2019"), new SickDays(), new SickChildDays(),
+				new WorkPlanning());
 		assertNotNull(t.addVacationDay(Util.DAY_FORMAT.parse("15/04/2019")));
 	}
 
 	@Test
 	public void testCannotAddVacationDayOnHoliday() throws ParseException, IOException {
-		TimeTracker t = new TimeTracker(new Config(), new ReportedTime(), new Holidays("15/04/2019"), new Vacations(), new SickDays(), new SickChildDays());
+		TimeTracker t = new TimeTracker(new Config(), new ReportedTime(), new Holidays("15/04/2019"), new Vacations(), new SickDays(), new SickChildDays(),
+				new WorkPlanning());
 		assertNotNull(t.addVacationDay(Util.DAY_FORMAT.parse("15/04/2019")));
 	}
 
 	@Test
 	public void testCanAddVacationDayOnHalfHoliday() throws ParseException, IOException {
-		TimeTracker t = new TimeTracker(new Config(), new ReportedTime(), new Holidays("15/04/2019 1/2"), new Vacations(), new SickDays(), new SickChildDays());
+		TimeTracker t = new TimeTracker(new Config(), new ReportedTime(), new Holidays("15/04/2019 1/2"), new Vacations(), new SickDays(), new SickChildDays(),
+				new WorkPlanning());
 		assertNull(t.addVacationDay(Util.DAY_FORMAT.parse("15/04/2019")));
 	}
 
@@ -76,7 +90,8 @@ public class TestTimeTracker {
 				"16/05/2019",
 				"17/05/2019"
 				);
-		TimeTracker t = new TimeTracker(new Config(), new ReportedTime(), new Holidays(), vacations, new SickDays(), new SickChildDays());
+		TimeTracker t = new TimeTracker(new Config(), new ReportedTime(), new Holidays(), vacations, new SickDays(), new SickChildDays(),
+				new WorkPlanning());
 		assertNotNull(t.addVacationDay(Util.DAY_FORMAT.parse("12/04/2019")));
 	}
 
@@ -120,7 +135,8 @@ public class TestTimeTracker {
 				"16/05/2019",
 				"17/05/2019"
 				);
-		TimeTracker t = new TimeTracker(new Config(), new ReportedTime(), holidays, vacations, new SickDays(), new SickChildDays());
+		TimeTracker t = new TimeTracker(new Config(), new ReportedTime(), holidays, vacations, new SickDays(), new SickChildDays(),
+				new WorkPlanning());
 		assertNull(t.addVacationDay(Util.DAY_FORMAT.parse("12/04/2019")));
 	}
 
@@ -163,7 +179,8 @@ public class TestTimeTracker {
 				"16/05/2019",
 				"17/05/2019"
 				);
-		TimeTracker t = new TimeTracker(new Config(), new ReportedTime(), holidays, vacations, new SickDays(), new SickChildDays());
+		TimeTracker t = new TimeTracker(new Config(), new ReportedTime(), holidays, vacations, new SickDays(), new SickChildDays(),
+				new WorkPlanning());
 		assertNotNull(t.addVacationDay(Util.DAY_FORMAT.parse("12/04/2019")));
 	}
 
@@ -207,7 +224,8 @@ public class TestTimeTracker {
 				"16/05/2019",
 				"17/05/2019"
 				);
-		TimeTracker t = new TimeTracker(new Config(), new ReportedTime(), holidays, vacations, new SickDays(), new SickChildDays());
+		TimeTracker t = new TimeTracker(new Config(), new ReportedTime(), holidays, vacations, new SickDays(), new SickChildDays(),
+				new WorkPlanning());
 		assertNull(t.addVacationDay(Util.DAY_FORMAT.parse("12/04/2019")));
 	}
 }

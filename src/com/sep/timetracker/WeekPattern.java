@@ -75,8 +75,4 @@ public class WeekPattern {
 		default: throw new IllegalArgumentException();
 		}
 	}
-
-	public boolean isWeekendDay(Date d) {
-		return 0 == getTimeToWork(d);
-	}
 }

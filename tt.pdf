@@ -2,7 +2,7 @@
 %‚„œ”
 2 0 obj
 <<
-/Length 5538
+/Length 5445
 >>
 stream
 BT
@@ -42,28 +42,37 @@ BT
 0.0384 Tw
 [(time / e)15(xpected w)10(ork time\) ratio. By def)10(ault, it assumes that you w)10(ork from Monday to Friday)65(,)-288.5(7.5 hours a)]TJ
 T*
-0.0794 Tw
-[(day)65(,)-329.4(and that you ha)20(v)15(e)15( )-15(25)-329.4(days of v)25(acation per year \(see)]TJ
+0.0657 Tw
+[(day)65(,)-315.7(and that you ha)20(v)15(e)15( )-15(25)-315.7(days of v)25(acation per year \(see)]TJ
 /TT4 1 Tf
-23.5133 0 TD
+23.3488 0 TD
 0 Tw
 (init)Tj
 /TT2 1 Tf
-1.7742 0 TD
-0.0793 Tw
-[(for changing the def)10(ault v)25(alues\). It supports)]TJ
--25.2876 -1.2 TD
-0.1077 Tw
-[(adding public holidays \(with the possibility to declare half-days\), declaring v)25(acation days, days you stay)]TJ
+1.7604 0 TD
+(and)Tj
+/TT4 1 Tf
+1.7594 0 TD
+(plan)Tj
+/TT2 1 Tf
+2.2057 0 TD
+0.0656 Tw
+[(for changing the def)10(ault v)25(alues\). It)]TJ
+-29.0745 -1.2 TD
+0.1138 Tw
+[(supports adding public holidays \(with the possibility to declare half-days\), declaring v)25(acation days, days)]TJ
 T*
-0.0189 Tw
-[(home because you are sick and days you stay home because you tak)10(e)-268.9(care of a sick child. In case you w)10(on-)]TJ
+0.0396 Tw
+[(you stay home because you are sick and days you stay home because you tak)10(e)-289.6(care of a sick child. In case)]TJ
+T*
+0.032 Tw
+[(you w)10(onder ho)25(w)-282(all these days of)25(f)-282(are e)25(v)15(en)-282.1(possible, this utility has been designed in a scandina)20(vian coun-)]TJ
 T*
 0 Tw
-[(der ho)25(w)-250(all these days of)25(f)-250(are e)25(v)15(en)-250(possible, this utility has been designed in a scandina)20(vian country ;-\))]TJ
+(try ;-\))Tj
 0 -2.4 TD
-0.0902 Tw
-[(Y)110(o)0(u)-340.2(can report w)10(ork)10(ed time by starting and stopping a stopw)10(atch as well as directly declaring time for a)]TJ
+0.0903 Tw
+[(Y)110(o)0(u)-340.3(can report w)10(ork)10(ed time by starting and stopping a stopw)10(atch as well as directly declaring time for a)]TJ
 0 -1.2 TD
 0 Tw
 [(gi)25(v)15(e)0(n)-250(day)65(.)]TJ
@@ -90,10 +99,10 @@ T*
 0.0623 Tw
 (cations on)Tj
 -39.0503 -1.2 TD
-0.0438 Tw
+0.0437 Tw
 [(the bookk)10(eeping )]TJ
 /TT5 1 Tf
-6.9648 0 TD
+6.9646 0 TD
 0 Tw
 (ﬁ)Tj
 /TT2 1 Tf
@@ -101,11 +110,11 @@ T*
 0.0437 Tw
 [(les of the utility)65(,)-293.7(you will ha)20(v)15(e)15( )-15(to)-293.7(commit those changes manually before you can use)]TJ
 /TT4 1 Tf
-35.0077 0 TD
+35.0075 0 TD
 0 Tw
 (tt)Tj
 /TT2 1 Tf
--42.5287 -1.2 TD
+-42.5283 -1.2 TD
 -0.0001 Tc
 0.0001 Tw
 [(again to report w)9.9(ork)9.9(ed time or declare holiday)64.9(,)-250.1(v)24.9(acation, etc.)]TJ
@@ -117,10 +126,10 @@ T*
 0.0394 Tw
 [(instance if you w)10(ant to do your time tracking across se)25(v)15(eral machines. In this case, it is up to you to use)]TJ
 /TT4 1 Tf
-42.5295 0 TD
+42.5293 0 TD
 0 Tw
 (tt)Tj
--42.5295 -1.2 TD
+-42.5293 -1.2 TD
 (git pull)Tj
 /TT2 1 Tf
 3.2788 0 TD
@@ -132,9 +141,9 @@ T*
 4.5845 0 TD
 [(to k)10(eep things in sync with your remote repository)65(.)]TJ
 /TT4 1 Tf
-10.95 0 0 10.95 72 405.6 Tm
+10.95 0 0 10.95 72 393.6 Tm
 (COMMANDS)Tj
-10 0 0 10 108 393.6 Tm
+10 0 0 10 108 381.6 Tm
 (help)Tj
 /TT2 1 Tf
 3.6 0 TD
@@ -152,7 +161,7 @@ T*
 [(<start> is the date to start time tracking from in dd/mm/yyyy format. This date will be the refer)20(-)]TJ
 0 -1.2 TD
 0.0136 Tw
-[(ence point when it comes to calculating the balance between the time you should ha)20(v)15(e)15( )-15(w)10(ork)10(ed and)]TJ
+[(ence point when it comes to calculating the balance between the time you should ha)20(v)15(e)15( )-15.1(w)10(ork)10(ed and)]TJ
 T*
 0 Tw
 [(the w)10(ork)10(ed time that you ha)20(v)15(e)15( )-15(reported.)]TJ
@@ -169,7 +178,7 @@ T*
 [(ed, <N> is an inte)15(ger indicating the number of v)25(acation days allo)25(wed per)]TJ
 -9.3806 -1.2 TD
 0.0471 Tw
-[(year)55(.)-297.2(The def)10(ault is 25 days. This v)25(alue is only used a safety net to pre)25(v)15(ent you from accidentally)]TJ
+[(year)55(.)-297.1(The def)10(ault is 25 days. This v)25(alue is only used a safety net to pre)25(v)15(ent you from accidentally)]TJ
 T*
 0 Tw
 [(re)15(gistering too man)15(y)-250(v)25(acation days on a gi)25(v)15(e)0(n)-250(year)55(.)]TJ
@@ -185,14 +194,14 @@ T*
 0.0362 Tw
 [(ed, <pattern> represents your re)15(gular w)10(ork pattern. It must be a comma-)]TJ
 -10.3547 -1.2 TD
-0.126 Tw
+0.1261 Tw
 [(separated list \(possibly empty\) where each part is of the form D)40(A)105(Y=hours:minutes where D)40(A)105(Y)]TJ
 T*
 0.0012 Tw
-[(must ha)20(v)15(e)15( )-15(one of the follo)25(wing v)25(alues: Mon, T)45(ue, W)80(ed, Thu, Fri, Sat, Sun.)-501.3(The parts can be in an)15(y)]TJ
+[(must ha)20(v)15(e)15( )-15.1(one of the follo)25(wing v)25(alues: Mon, T)45(ue, W)80(ed, Thu, Fri, Sat, Sun.)-501.2(The parts can be in an)15(y)]TJ
 T*
 0.0426 Tw
-[(order and an)15(y)-292.7(day not described in the pattern is considered a week)10(end day)65(,)-292.7(i.e. a day you are not)]TJ
+[(order and an)15(y)-292.6(day not described in the pattern is considered a week)10(end day)65(,)-292.7(i.e. a day you are not)]TJ
 T*
 0.0801 Tw
 [(supposed to w)10(ork. F)15(or instance, the def)10(ault pattern of 7.5 hours a day from Monday to Friday is)]TJ
@@ -202,18 +211,9 @@ T*
 4.32 -2.4 TD
 [(Mon=7:30,T)45(ue=7:30,W)80(ed=7:30,Thu=7:30,Fri=7:30)]TJ
 -4.32 -3.6 TD
-0.1149 Tw
-[(This command creates a bookk)10(eeping directory named .timetrack)10(er located in your home direc-)]TJ
-0 -1.2 TD
-0.0458 Tw
-[(tory)65(.)-545.8(This directory is then turned into a git repository by in)40(v)20(oking)]TJ
-/TT4 1 Tf
-27.5315 0 TD
-(git init)Tj
-/TT2 1 Tf
-3.1474 0 TD
-[(to allo)25(w)-295.9(time tracking)]TJ
-8.4211 -4.08 TD
+0.0196 Tw
+[(If your w)10(ork schedule is not the same e)25(v)15(ery week or if you ha)20(v)15(e)15( )-15.1(to)-269.7(adjust it from time to time, use)]TJ
+39.1 -4.08 TD
 0 Tw
 (1)Tj
 ET
@@ -234,7 +234,7 @@ endobj
 endobj
 10 0 obj
 <<
-/Length 5226
+/Length 5535
 >>
 stream
 BT
@@ -248,28 +248,55 @@ BT
 44.4117 0 TD
 (TT\(1\))Tj
 -37.2117 -3.6 TD
-[(operations to be track)10(ed themselv)15(es as git commits to ensure traceability)65(.)]TJ
+(the)Tj
+/TT4 1 Tf
+1.4717 0 TD
+(plan)Tj
+/TT2 1 Tf
+2.1401 0 TD
+[(command to o)15(v)15(erride the re)15(gular weekly schedule.)]TJ
+-3.6118 -2.4 TD
+(The)Tj
+/TT4 1 Tf
+2.0122 0 TD
+(init)Tj
+/TT2 1 Tf
+1.9023 0 TD
+0.2074 Tw
+[(command creates a bookk)10(eeping directory named .timetrack)10(er located in your home)]TJ
+-3.9145 -1.2 TD
+0.1442 Tw
+[(directory)65(.)-644.1(This directory is then turned into a git repository by in)40(v)20(oking)]TJ
+/TT4 1 Tf
+30.7108 0 TD
+(git init)Tj
+/TT2 1 Tf
+3.3441 0 TD
+[(to allo)25(w)-394.2(time)]TJ
+-34.0548 -1.2 TD
+0 Tw
+[(tracking operations to be track)10(ed themselv)15(es as git commits to ensure traceability)65(.)]TJ
 /TT4 1 Tf
 -3.6 -2.88 TD
 (start)Tj
 /TT2 1 Tf
 3.6 0 TD
-[(Starts the clockw)10(atch. Y)110(ou need use)]TJ
+[(Starts the stopw)10(atch. Y)110(ou need use)]TJ
 /TT4 1 Tf
-14.6256 0 TD
+14.1271 0 TD
 (stop)Tj
 /TT2 1 Tf
 2.0283 0 TD
 [(to stop it and report the interv)25(al as w)10(ork)10(ed time.)]TJ
 /TT4 1 Tf
--20.2539 -2.88 TD
+-19.7554 -2.88 TD
 (stop)Tj
 /TT2 1 Tf
 2.0283 0 TD
 ([--force] [description])Tj
 1.5717 -1.2 TD
-0.0052 Tw
-[(Stops the clockw)10(atch and reports the elapsed time as w)10(ork)10(ed time. The optional description is only)]TJ
+0.0385 Tw
+[(Stops the stopw)10(atch and reports the elapsed time as w)10(ork)10(ed time. The optional description is only)]TJ
 T*
 0.0117 Tw
 [(meant to be used as a hint for humans. If the elapsed time is lar)18(ger than 24 hours, the program will)]TJ
@@ -320,6 +347,44 @@ T*
 0 Tw
 [(you need to use --force if the duration is lar)18(ger than 10 hours.)]TJ
 /TT4 1 Tf
+-3.6 -4.08 TD
+(plan)Tj
+/TT2 1 Tf
+2.1401 0 TD
+([--force] <day> <duration> [description])Tj
+1.4599 -1.2 TD
+0.0745 Tw
+[(Declares the amount of time that should be w)10(ork)10(ed on the gi)25(v)15(e)0(n)-324.5(day)65(.)-324.5(This v)25(alue will tak)10(e)-324.5(prece-)]TJ
+T*
+0.0119 Tw
+[(dence o)15(v)15(e)0(r)-261.9(the v)25(alue gi)25(v)15(e)0(n)-261.9(b)0(y)-261.9(the week pattern. <day> is gi)25(v)15(e)0(n)-262(i)0(n)-262(dd/mm/yyyy format. <duration>)]TJ
+T*
+0.0277 Tw
+[(is the amount of time to w)10(ork in the hh:mm format.)-527.8(The description is optional and is only meant)]TJ
+T*
+0.0377 Tw
+(as a hint for humans. As for the)Tj
+/TT4 1 Tf
+13.1601 0 TD
+0 Tw
+(stop)Tj
+/TT2 1 Tf
+2.0661 0 TD
+0.0378 Tw
+[(command, you cannot report a duration lar)18(ger than 24 hours)]TJ
+-15.2262 -1.2 TD
+0 Tw
+[(and you need to use --force if the duration is lar)18(ger than 10 hours.)]TJ
+0 -2.4 TD
+0.0406 Tw
+[(F)15(o)0(r)-290.7(e)15(xample, if you normally w)10(ork 8 hours from Monday to Friday b)20(ut you e)15(xceptionally need to)]TJ
+0 -1.2 TD
+0.0124 Tw
+[(sw)10(ap a Friday with a Saturday)65(,)-262.5(you can use this command to declare a duration of 0:00 for the Fri-)]TJ
+T*
+0 Tw
+[(day and a duration of 8:00 for the Saturday)65(.)]TJ
+/TT4 1 Tf
 -3.6 -2.88 TD
 (holiday)Tj
 /TT2 1 Tf
@@ -367,8 +432,41 @@ T*
 T*
 0 Tw
 [(already re)15(gistered as a sick day)65(,)-250(a)-250(sick child day)65(,)-250(a)-250(week-end day or a full public holiday)65(.)]TJ
+39.1 -7.44 TD
+(2)Tj
+ET
+endstream
+endobj
+11 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT5 6 0 R
+>>
+/ExtGState <<
+/GS1 7 0 R
+>>
+>>
+endobj
+13 0 obj
+<<
+/Length 3449
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 72 744 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(TT\(1\) )Tj
+44.4117 0 TD
+(TT\(1\))Tj
 /TT4 1 Tf
--3.6 -2.88 TD
+-40.8117 -3.6 TD
 (child)Tj
 /TT2 1 Tf
 2.3618 0 TD
@@ -429,42 +527,9 @@ T*
 [(Le)15(gend:)]TJ
 4.32 -1.2 TD
 [(--- )-2250(Hours)-250(due and not w)10(ork)10(ed)]TJ
-34.78 -4.56 TD
-(2)Tj
-ET
-endstream
-endobj
-11 0 obj
-<<
-/ProcSet [/PDF /Text ]
-/Font <<
-/TT2 4 0 R
-/TT4 5 0 R
-/TT5 6 0 R
->>
-/ExtGState <<
-/GS1 7 0 R
->>
->>
-endobj
-13 0 obj
-<<
-/Length 1816
->>
-stream
-BT
-/TT2 1 Tf
-10 0 0 10 72 744 Tm
-0 g
-/GS1 gs
-0 Tc
-0 Tw
-(TT\(1\) )Tj
-44.4117 0 TD
-(TT\(1\))Tj
--32.8917 -3.6 TD
+T*
 [(### )-2250(Hours)-250(due and w)10(ork)10(ed)]TJ
-0 -1.2 TD
+T*
 [(+++ )-2250(Ov)15(ertime hours \(an)15(y)-250(time w)10(ork)10(ed past the e)15(xpected duration for the day\))]TJ
 /TT4 1 Tf
 -7.92 -4.08 TD
@@ -496,8 +561,16 @@ T*
 [(child )-2250(Remo)15(v)15(e)0(s)-250(the gi)25(v)15(e)0(n)-250(sick child day)]TJ
 T*
 [(w)10(ork)10(ed )-1750(Remo)15(v)15(e)0(s)-250(all the w)10(ork)10(ed time reported for the gi)25(v)15(e)0(n)-250(day)]TJ
+T*
+[(planned )-1250(Remo)15(v)15(e)0(s)-250(the entry for the gi)25(v)15(e)0(n)-250(day from the planning )]TJ
+/TT5 1 Tf
+26.8118 0 TD
+(ﬁ)Tj
+/TT2 1 Tf
+0.5562 0 TD
+(le)Tj
 /TT4 1 Tf
--7.92 -2.88 TD
+-35.288 -2.88 TD
 (git)Tj
 /TT2 1 Tf
 1.3608 0 TD
@@ -526,7 +599,7 @@ T*
 /TT2 1 Tf
 1.6948 0 TD
 (command.)Tj
-8.2579 -47.04 TD
+8.2579 -24.96 TD
 (3)Tj
 ET
 endstream
@@ -610,10 +683,10 @@ endobj
 /FirstChar 32
 /LastChar 124
 /Widths [250 0 0 500 0 0 0 0 333 333 0 564 250 333 250 278 
-500 500 500 500 500 500 0 500 0 0 278 278 564 564 564 0 
+500 500 500 500 500 500 0 500 500 0 278 278 564 564 564 0 
 0 722 667 0 722 611 556 0 722 333 0 0 611 889 722 722 
 556 0 667 556 611 0 0 944 0 722 0 333 0 333 0 0 
-0 444 500 444 500 444 333 500 500 278 0 500 278 778 500 500 
+0 444 500 444 500 444 333 500 500 278 278 500 278 778 500 500 
 500 0 333 389 278 500 500 722 500 500 444 0 200 ]
 /Encoding /WinAnsiEncoding
 /BaseFont /Times-Roman
@@ -693,8 +766,8 @@ endobj
 endobj
 20 0 obj
 <<
-/CreationDate (D:20190423213019+02'00')
-/ModDate (D:20190423213019+02'00')
+/CreationDate (D:20190423224643+02'00')
+/ModDate (D:20190423224643+02'00')
 /Producer (PSNormalizer.framework)
 >>
 endobj
@@ -708,34 +781,34 @@ endobj
 xref
 0 22
 0000000000 65535 f 
-0000014912 00000 n 
+0000016765 00000 n 
 0000000016 00000 n 
-0000005606 00000 n 
-0000013843 00000 n 
-0000014328 00000 n 
-0000014742 00000 n 
-0000013107 00000 n 
-0000015225 00000 n 
-0000014992 00000 n 
-0000005723 00000 n 
-0000011002 00000 n 
-0000015074 00000 n 
-0000011120 00000 n 
-0000012989 00000 n 
-0000013247 00000 n 
-0000013444 00000 n 
-0000013646 00000 n 
-0000015157 00000 n 
-0000015185 00000 n 
-0000015319 00000 n 
-0000015451 00000 n 
+0000005513 00000 n 
+0000015692 00000 n 
+0000016181 00000 n 
+0000016595 00000 n 
+0000014956 00000 n 
+0000017078 00000 n 
+0000016845 00000 n 
+0000005630 00000 n 
+0000011218 00000 n 
+0000016927 00000 n 
+0000011336 00000 n 
+0000014838 00000 n 
+0000015096 00000 n 
+0000015293 00000 n 
+0000015495 00000 n 
+0000017010 00000 n 
+0000017038 00000 n 
+0000017172 00000 n 
+0000017304 00000 n 
 trailer
 <<
 /Size 22
 /Root 21 0 R
 /Info 20 0 R
-/ID [<9ba214f6c8b396aa808abf43b80953f8><9ba214f6c8b396aa808abf43b80953f8>]
+/ID [<b28f1f4eed348e48fb5bc667f7959676><b28f1f4eed348e48fb5bc667f7959676>]
 >>
 startxref
-15520
+17373
 %%EOF

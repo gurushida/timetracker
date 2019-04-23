@@ -61,7 +61,8 @@ public class Main {
 		case "holiday": addHoliday(timeTracker, args); return;
 		case "start": startTimeTracking(); return;
 		case "stop": stopTimeTracking(timeTracker, args); return;
-		case "add": reportTime(timeTracker, args); return;
+		case "add": reportTime(timeTracker, args, true); return;
+		case "plan": reportTime(timeTracker, args, false); return;
 		case "remove": removeDay(timeTracker, args); return;
 		default: {
 			System.err.println("Unknown command: '" + args[0] + "'");
@@ -152,7 +153,7 @@ public class Main {
 		new TimeTracker(dir).printReport(Report.WEEK, new Date(), false);
 	}
 
-	private static void reportTime(TimeTracker timeTracker, String[] args) throws IOException, ParseException {
+	private static void reportTime(TimeTracker timeTracker, String[] args, boolean declaringWorkedTime) throws IOException, ParseException {
 		GitUtil.checkUncommittedChanges(dir);
 
 		boolean force = args.length > 1 && "--force".equals(args[1]);
@@ -197,7 +198,7 @@ public class Main {
 		}
 
 		if (!force && duration >= 10 * 60) {
-			System.err.println("The reported worked time is greater than 10 hours.");
+			System.err.println("The " + (declaringWorkedTime ? "reported worked" : "planned") + " time is greater than 10 hours.");
 			System.err.println("Re-run with add --force <day> <duration> [description] if this is not a mistake");
 			System.err.println();
 			System.exit(1);
@@ -221,9 +222,18 @@ public class Main {
 		}
 		workedTime += minutes + " minute" + (minutes > 1 ? "s" : "");
 
-		Date end = Util.addMinutes(d, duration);
-		timeTracker.reportWorkedTime(d, end, description);
-		String msg = "Reported worked time: " + workedTime;
+		if (declaringWorkedTime) {
+			Date end = Util.addMinutes(d, duration);
+			timeTracker.reportWorkedTime(d, end, description);
+		} else {
+			timeTracker.planWork(d, duration, description);
+		}
+		String msg;
+		if (declaringWorkedTime) {
+			msg = "Reported worked time: " + workedTime;
+		} else {
+			msg = "Planned " + workedTime + " on " + Util.DAY_FORMAT.format(d);
+		}
 		System.out.println(msg);
 		System.out.println();
 
@@ -283,6 +293,7 @@ public class Main {
 		case "child": break;
 		case "sick": break;
 		case "worked": break;
+		case "planned": break;
 		default: {
 			System.err.println("Unsupported <type> value: " + type);
 			System.err.println();
@@ -314,6 +325,7 @@ public class Main {
 		case "child": displayableType = "sick child"; err = timeTracker.removeSickChildDay(d, force); break;
 		case "sick": err = timeTracker.removeSickDay(d, force); break;
 		case "worked": err = timeTracker.removeWorkedDay(d, force); break;
+		case "planned": err = timeTracker.removePlannedDay(d, force); break;
 		default: throw new IllegalStateException();
 		}
 		if (err != null) {
@@ -533,6 +545,7 @@ public class Main {
 		SickDays.initialize(new File(dir, SickDays.FILENAME));
 		SickChildDays.initialize(new File(dir, SickChildDays.FILENAME));
 		ReportedTime.initialize(new File(dir, ReportedTime.FILENAME));
+		WorkPlanning.initialize(new File(dir, WorkPlanning.FILENAME));
 		GitUtil.init(dir);
 	}
 
@@ -558,6 +571,12 @@ public class Main {
 		System.out.println("                   Registers an amount of worked time. <day> is given in dd/mm/yyyy format.");
 		System.out.println("                   <duration> is the amount of worked time in the hh:mm format. The description");
 		System.out.println("                   is optional and is only meant as a hint for humans.");
+		System.out.println();
+		System.out.println("  plan <day> <duration> [description]");
+		System.out.println("                   Declares the amount of time that should be worked on the given day. This value");
+		System.out.println("                   will take precedence over the value given by the week pattern. <day> is given");
+		System.out.println("                   in dd/mm/yyyy format. <duration> is the amount of time to work in the hh:mm format.");
+		System.out.println("                   The description is optional and is only meant as a hint for humans.");
 		System.out.println();
 		System.out.println("  holiday [--half] <day> [description]");
 		System.out.println("                   Registers a public holiday given in dd/mm/yyyy format. If --half is used,");
@@ -595,6 +614,7 @@ public class Main {
 		System.out.println("                     sick      Removes the given sick day");
 		System.out.println("                     child     Removes the given sick child day");
 		System.out.println("                     worked    Removes all the worked time reported for the given day");
+		System.out.println("                     planned   Removes the entry for the given day from the planning file");
 		System.out.println();
 		System.out.println("  init <start> [--vacations=<N>] [--weekpattern=<pattern>]");
 		System.out.println("                   Initializes time tracking. <start> is the date to start time tracking from");

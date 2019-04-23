@@ -17,9 +17,10 @@ public class TimeTracker {
 	private final Vacations vacations;
 	private final SickDays sickDays;
 	private final SickChildDays sickChildDays;
+	private final WorkPlanning workPlanning;
 	
 	public TimeTracker() throws ParseException {
-		this(new Config(), new ReportedTime(), new Holidays(), new Vacations(), new SickDays(), new SickChildDays());
+		this(new Config(), new ReportedTime(), new Holidays(), new Vacations(), new SickDays(), new SickChildDays(), new WorkPlanning());
 	}
 
 	public TimeTracker(File directory) throws ParseException, FileNotFoundException {
@@ -28,16 +29,32 @@ public class TimeTracker {
 				new Holidays(new File(directory, Holidays.FILENAME)),
 				new Vacations(new File(directory, Vacations.FILENAME)),
 				new SickDays(new File(directory, SickDays.FILENAME)),
-				new SickChildDays(new File(directory, SickChildDays.FILENAME)));
+				new SickChildDays(new File(directory, SickChildDays.FILENAME)),
+				new WorkPlanning(new File(directory, WorkPlanning.FILENAME)));
 	}
 	
-	public TimeTracker(Config config, ReportedTime reportedTime, Holidays holidays, Vacations vacations, SickDays sickDays, SickChildDays sickChildDays) {
+	public TimeTracker(Config config, ReportedTime reportedTime, Holidays holidays, Vacations vacations, SickDays sickDays, SickChildDays sickChildDays,
+			WorkPlanning workPlanning) {
 		this.config = config;
 		this.reportedTime = reportedTime;
 		this.holidays = holidays;
 		this.vacations = vacations;
 		this.sickDays = sickDays;
 		this.sickChildDays = sickChildDays;
+		this.workPlanning = workPlanning;
+	}
+
+	/**
+	 * Returns the amount of time to work on the given day, without considering
+	 * holidays, vacations and sick days. If the work planning file declare a value
+	 * for the given day, it takes precedence over the regular week pattern.
+	 */
+	public int getTimeToWork(Date d) {
+		Integer n = workPlanning.getTimeToWork(d);
+		if (n != null) {
+			return n;
+		}
+		return config.getWeekPattern().getTimeToWork(d);
 	}
 
 	public void printReport(Report report, Date dateEnd, boolean printComments) throws ParseException {
@@ -78,7 +95,7 @@ public class TimeTracker {
 		while (currentDate.compareTo(dateEnd) <= 0) {
 			DayType dayType = getDayType(current);
 			long minutesWorked = reportedTime.getTimeWorkedInMinutes(current);
-			int minutesToWork = (int) (dayType.workRatio * config.getWeekPattern().getTimeToWork(currentDate));
+			int minutesToWork = (int) (dayType.workRatio * getTimeToWork(currentDate));
 			if (currentDate.compareTo(reportStart) >= 0) {
 				printReportLine(currentDate, dayType, minutesToWork, minutesWorked, printComments);
 			}
@@ -178,12 +195,19 @@ public class TimeTracker {
 	public DayType getDayType(String d) throws ParseException {
 		return getDayType(Util.DAY_FORMAT.parse(d));
 	}
-	
+
+	/**
+	 * Returns true if there is no work planned for the given day.
+	 */
+	public boolean isWeekendDay(Date d) {
+		return 0 == getTimeToWork(d);
+	}
+
 	/**
 	 * Given a date, return the type of day it is.
 	 */
 	public DayType getDayType(Date d) {
-		if (config.getWeekPattern().isWeekendDay(d)) {
+		if (isWeekendDay(d)) {
 			return DayType.WEEK_END;
 		}
 		
@@ -215,7 +239,7 @@ public class TimeTracker {
 	 * vacation day would overflow the annual days/year limit.
 	 */
 	public String addVacationDay(Date d) throws ParseException, IOException {
-		if (config.getWeekPattern().isWeekendDay(d))  {
+		if (isWeekendDay(d))  {
 			return "Cannot add vacation day on " + Util.DAY_FORMAT.format(d) + " as it is a " + Util.getDay(d);
 		}
 		if (vacations.isVacationDay(d)) {
@@ -255,7 +279,7 @@ public class TimeTracker {
 	 * is a full holiday day, is already a sick day or a child sick day.
 	 */
 	public String addSickDay(Date d) throws ParseException, IOException {
-		if (config.getWeekPattern().isWeekendDay(d))  {
+		if (isWeekendDay(d))  {
 			return "Cannot add sick day on " + Util.DAY_FORMAT.format(d) + " as it is a " + Util.getDay(d);
 		}
 
@@ -281,7 +305,7 @@ public class TimeTracker {
 	 * is a full holiday day, is already a sick day or a child sick day.
 	 */
 	public String addSickChildDay(Date d) throws ParseException, IOException {
-		if (config.getWeekPattern().isWeekendDay(d))  {
+		if (isWeekendDay(d))  {
 			return "Cannot add sick child day on " + Util.DAY_FORMAT.format(d) + " as it is a " + Util.getDay(d);
 		}
 
@@ -317,6 +341,10 @@ public class TimeTracker {
 
 	public void reportWorkedTime(Date start, Date end, String description) throws IOException {
 		reportedTime.reportWorkedTimeInterval(start, end, description);
+	}
+
+	public void planWork(Date day, int minutesToWork, String description) throws IOException {
+		workPlanning.addPlanningDay(day, minutesToWork, description);
 	}
 
 	/**
@@ -405,6 +433,34 @@ public class TimeTracker {
 			Util.askForConfirmation("Are you sure you want to remove all the time registered for " + Util.DAY_FORMAT.format(d) + " (" + workedTime + ") ?");
 		}
 		reportedTime.removeWorkedDay(d);
+		return null;
+	}
+
+	/**
+	 * Removes the given planned day. Asks for confirmation unless force is true.
+	 * Returns null if the removal is done; otherwise returns an error message.
+	 */
+	public String removePlannedDay(Date d, boolean force) throws IOException {
+		Integer duration = workPlanning.getTimeToWork(d);
+		if (duration == null) {
+			return "Cannot remove " + Util.DAY_FORMAT.format(d) + " as there is nothing planned for this day !";
+		}
+		if (!force) {
+			long hours = duration / 60;
+			long minutes = duration % 60;
+			String workedTime = "";
+			if (hours > 1) {
+				workedTime = hours + " hours and ";
+			} else if (hours == 1) {
+				workedTime = "1 hour and ";
+			} else {
+				workedTime = "";
+			}
+			workedTime += minutes + " minute" + (minutes > 1 ? "s" : "");
+
+			Util.askForConfirmation("Are you sure you want to delete the planned day " + Util.DAY_FORMAT.format(d) + " (" + workedTime + ") ?");
+		}
+		workPlanning.removePlanningDay(d);
 		return null;
 	}
 }
