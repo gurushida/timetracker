@@ -42,7 +42,7 @@ task installJar(type: Copy) {
 task installManPage(type: Copy) {
 	onlyIf { !Os.isFamily(Os.FAMILY_WINDOWS) }
     from file("$project.projectDir/tt.1")
-    into file("/usr/share/man/man1/")
+    into file("/usr/local/share/man/man1/")
 }
 
 task install {
